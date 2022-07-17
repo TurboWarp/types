@@ -81,7 +81,7 @@ declare module 'scratch-vm' {
     toXML(isLocal?: boolean): string;
   }
 
-  enum VariableType {
+  const enum VariableType {
     Scalar = '',
     List = 'list',
     Broadcast = 'broadcast_msg'
@@ -145,8 +145,8 @@ declare module 'scratch-vm' {
      */
     lookupVariableById(id: string): Variable | undefined;
 
-    lookupVariableByNameAndType(name: string): VariableType | undefined;
-    lookupVariableByNameAndType(name: string, type: '', skipStage?: boolean): VariableType | undefined;
+    lookupVariableByNameAndType(name: string): ScalarVariable | undefined;
+    lookupVariableByNameAndType(name: string, type: '', skipStage?: boolean): ScalarVariable | undefined;
     lookupVariableByNameAndType(name: string, type: 'list', skipStage?: boolean): ListVariable | undefined;
     lookupVariableByNameAndType(name: string, type: 'broadcast_msg', skipStage?: boolean): BroadcastVariable | undefined;
 
@@ -161,7 +161,7 @@ declare module 'scratch-vm' {
     dispose(): void;
   }
 
-  enum RotationStyle {
+  const enum RotationStyle {
     AllAround = 'all-around',
     LeftRight = 'left-right',
     None = "don't rotate"
@@ -171,7 +171,7 @@ declare module 'scratch-vm' {
     // TODO
   }
 
-  enum Effect {
+  const enum Effect {
     // TODO: document ranges
     Color = 'color',
     Fisheye = 'fisheye',
@@ -734,7 +734,9 @@ declare module 'scratch-vm' {
     }];
   }
 
-  export interface VirtualMachine extends EventEmitter<VirtualMachineEventMap> {
+  export class VirtualMachine extends EventEmitter<VirtualMachineEventMap> {
+    constructor();
+
     runtime: Runtime;
 
     /**
