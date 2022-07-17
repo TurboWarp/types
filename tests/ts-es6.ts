@@ -1,7 +1,6 @@
-import {VirtualMachine} from 'scratch-vm';
+import VM from 'scratch-vm';
 
-declare const vm: VirtualMachine;
-
+const vm = new VM();
 const runtime = vm.runtime;
 
 runtime.on('SCRIPT_GLOW_ON', (glowData) => {

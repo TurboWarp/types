@@ -1,22 +1,18 @@
 // Type definitions for scratch-vm
 // Project: https://github.com/LLK/scratch-vm
 
-declare module 'scratch-vm' {
-  import EventEmitter = require('events');
-  import Immutable = require('immutable');
-  import Renderer = require('scratch-render');
-
+declare namespace VM {
   type ScratchCompatibleValue = string | boolean | number;
 
-  export interface Costume {
+  interface Costume {
     // TODO
   }
 
-  export interface Sound {
+  interface Sound {
     // TODO
   }
 
-  export interface Sprite {
+  interface Sprite {
     runtime: Runtime;
 
     blocks: Blocks;
@@ -28,11 +24,11 @@ declare module 'scratch-vm' {
     sounds: Sound[];
   }
 
-  export interface Block {
+  interface Block {
     // TODO
   }
 
-  export interface Blocks {
+  interface Blocks {
     runtime: Runtime;
 
     _blocks: Record<string, Block>;
@@ -99,7 +95,7 @@ declare module 'scratch-vm' {
 
   interface BroadcastVariable extends BaseVariable {
     type: 'broadcast_msg';
-    
+
     /**
      * Always the same as name.
      */
@@ -108,11 +104,11 @@ declare module 'scratch-vm' {
 
   type Variable = ScalarVariable | ListVariable | BroadcastVariable;
 
-  export interface Comment {
+  interface Comment {
     // TODO
   }
 
-  export interface BaseTarget extends EventEmitter<{}> {
+  interface BaseTarget extends EventEmitter<{}> {
     runtime: Runtime;
 
     id: string;
@@ -192,10 +188,10 @@ declare module 'scratch-vm' {
     bottom: number;
   }
 
-  export interface RenderedTarget extends BaseTarget {
+  interface RenderedTarget extends BaseTarget {
     sprite: Sprite;
 
-    renderer: Renderer.RenderWebGL;
+    renderer: RenderWebGL;
 
     drawableID: number;
 
@@ -258,9 +254,9 @@ declare module 'scratch-vm' {
      */
     setSize(size: number): void;
 
-    getBounds(): Renderer.Rectangle;
+    getBounds(): RenderWebGL.Rectangle;
 
-    getBoundsForBubble(): Renderer.Rectangle;
+    getBoundsForBubble(): RenderWebGL.Rectangle;
 
     draggable: boolean;
 
@@ -335,8 +331,8 @@ declare module 'scratch-vm' {
 
     /**
      * Update the value of an effect.
-     * @param effectName 
-     * @param value 
+     * @param effectName
+     * @param value
      */
     setEffect(effectName: Effect, value: number): void;
 
@@ -396,7 +392,7 @@ declare module 'scratch-vm' {
     tempo: number;
 
     videoTransparency: number;
-    
+
 
     /**
      * Create a clone of this sprite if the clone limit has not been reached.
@@ -421,31 +417,31 @@ declare module 'scratch-vm' {
   // all targets are RenderedTarget.
   type Target = RenderedTarget;
 
-  export interface SerializedTarget {
+  interface SerializedTarget {
     // TODO
   }
 
-  export interface Thread {
+  interface Thread {
     // TODO
   }
 
-  export interface HatInfo {
+  interface HatInfo {
     // TODO
   }
 
-  export interface ExtensionInfo {
+  interface ExtensionInfo {
     // TODO
   }
 
-  export interface Peripheral {
+  interface Peripheral {
     // TODO
   }
 
-  export interface Profiler {
+  interface Profiler {
     // TODO
   }
 
-  export interface Sequencer {
+  interface Sequencer {
     // TODO
   }
 
@@ -479,7 +475,7 @@ declare module 'scratch-vm' {
 
     VISUAL_REPORT: [];
 
-    MONITORS_UPDATE: [Immutable.OrderedMap];
+    MONITORS_UPDATE: [OrderedMap];
 
     BLOCK_DRAG_UPDATE: [
       // Are blocks over GUI?
@@ -567,7 +563,7 @@ declare module 'scratch-vm' {
     targetWasRemoved: [Target];
   }
 
-  export interface Runtime extends EventEmitter<RuntimeEventMap> {
+  interface Runtime extends EventEmitter<RuntimeEventMap> {
     /**
      * Start the runtime's event loop. This doesn't start any scripts.
      */
@@ -733,95 +729,95 @@ declare module 'scratch-vm' {
       thread: string;
     }];
   }
+}
 
-  export class VirtualMachine extends EventEmitter<VirtualMachineEventMap> {
-    constructor();
+declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
+  constructor();
 
-    runtime: Runtime;
+  runtime: VM.Runtime;
 
-    /**
-     * @see {Runtime.start}
-     */
-    start(): void;
+  /**
+   * @see {Runtime.start}
+   */
+  start(): void;
 
-    /**
-     * @see {Runtime.greenFlag}
-     */
-    greenFlag(): void;
+  /**
+   * @see {Runtime.greenFlag}
+   */
+  greenFlag(): void;
 
-    /**
-     * Changes whether the runtime is in turbo mode or not.
-     * Emits either TURBO_MODE_ON or TURBO_MODE_OFF.
-     * @param turboMode whether turbo mode should be enabled
-     */
-    setTurboMode(turboMode: boolean): void;
+  /**
+   * Changes whether the runtime is in turbo mode or not.
+   * Emits either TURBO_MODE_ON or TURBO_MODE_OFF.
+   * @param turboMode whether turbo mode should be enabled
+   */
+  setTurboMode(turboMode: boolean): void;
 
-    /**
-     * Changes whether the runtime is in "compatibility mode" (true by default)
-     * Compatibility mode sets the runtime's framerate to 30 FPS. Disabling it sets the framerate to 60 FPS.
-     * @param compatibilityMode 
-     */
-    setCompatibilityMode(compatibilityMode: boolean): void;
+  /**
+   * Changes whether the runtime is in "compatibility mode" (true by default)
+   * Compatibility mode sets the runtime's framerate to 30 FPS. Disabling it sets the framerate to 60 FPS.
+   * @param compatibilityMode
+   */
+  setCompatibilityMode(compatibilityMode: boolean): void;
 
-    /**
-     * @see {Runtime.stopAll}
-     */
-    stopAll(): void;
+  /**
+   * @see {Runtime.stopAll}
+   */
+  stopAll(): void;
 
-    /**
-     * Remove everything from the VM.
-     */
-    clear(): void;
+  /**
+   * Remove everything from the VM.
+   */
+  clear(): void;
 
-    /**
-     * Send data to one of the runtime's IO devices.
-     * If the device doesn't exist, silently does nothing.
-     * @param device The name of the device to send data to.
-     * @param data The data to be sent. Type depends on the device being sent data.
-     * TODO: type this better
-     */
-    postIOData(device: string, data: unknown): void;
+  /**
+   * Send data to one of the runtime's IO devices.
+   * If the device doesn't exist, silently does nothing.
+   * @param device The name of the device to send data to.
+   * @param data The data to be sent. Type depends on the device being sent data.
+   * TODO: type this better
+   */
+  postIOData(device: string, data: unknown): void;
 
-    /**
-     * Load a project.
-     * @param input Compressed sb, sb2, sb3 or sb2 project.json or sb3 project.json.
-     */
-    loadProject(input: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
+  /**
+   * Load a project.
+   * @param input Compressed sb, sb2, sb3 or sb2 project.json or sb3 project.json.
+   */
+  loadProject(input: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
 
-    /**
-     * @deprecated
-     * @see {loadProject}
-     */
-    fromJSON(input: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
+  /**
+   * @deprecated
+   * @see {loadProject}
+   */
+  fromJSON(input: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
 
-    /**
-     * Export the project to a compressed sb3 file.
-     */
-    saveProjectSb3(): Promise<Blob>;
+  /**
+   * the project to a compressed sb3 file.
+   */
+  saveProjectSb3(): Promise<Blob>;
 
-    /**
-     * Export a specific sprite to a compressed sprite3 file.
-     * @param targetId The ID of the target
-     */
-    exportSprite(targetId: string): Promise<Blob>;
-    exportSprite(targetId: string, zipType: string): Promise<unknown>;
+  /**
+   * a specific sprite to a compressed sprite3 file.
+   * @param targetId The ID of the target
+   */
+  exportSprite(targetId: string): Promise<Blob>;
+  exportSprite(targetId: string, zipType: string): Promise<unknown>;
 
-    toJSON(targetId?: string): string;
+  toJSON(targetId?: string): string;
 
-    /**
-     * Emit a targetsUpdate event about the current target information.
-     * @param shouldTriggerProjectChange Whether a PROJECT_CHANGED event should be emitted. Defaults to true.
-     */
-    emitTargetsUpdate(shouldTriggerProjectChange?: boolean): void;
+  /**
+   * Emit a targetsUpdate event about the current target information.
+   * @param shouldTriggerProjectChange Whether a PROJECT_CHANGED event should be emitted. Defaults to true.
+   */
+  emitTargetsUpdate(shouldTriggerProjectChange?: boolean): void;
 
-    /**
-     * Emit a workspaceUpdate event.
-     */
-    emitWorkspaceUpdate(): void;
+  /**
+   * Emit a workspaceUpdate event.
+   */
+  emitWorkspaceUpdate(): void;
 
-    /**
-     * The target open in the editor. This will be null before a project has loaded.
-     */
-    editingTarget: Target | null;
-  }
+  /**
+   * The target open in the editor. This will be null before a project has loaded.
+   */
+  editingTarget: VM.Target | null;
 }

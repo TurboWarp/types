@@ -1,5 +1,8 @@
-declare module 'scratch-render' {
-  export interface Rectangle {
+// Type definitions for scratch-render
+// Project: https://github.com/LLK/scratch-render
+
+declare namespace RenderWebGL {
+  interface Rectangle {
     left: number;
     right: number;
     bottom: number;
@@ -14,8 +17,8 @@ declare module 'scratch-render' {
     clamp(left: number, right: number, bottom: number, top: number): void;
     snapToInt(): void;
   }
+}
 
-  export interface RenderWebGL {
-    // TODO
-  }
+declare class RenderWebGL {
+  // TODO
 }
