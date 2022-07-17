@@ -8,6 +8,7 @@ Things we want to document in the near future:
 
  - scratch-vm
  - scratch-render
+ - scratch-blocks
  - sb3 project.json
 
 Things we want to document eventually, but lower priority:
