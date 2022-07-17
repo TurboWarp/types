@@ -20,5 +20,14 @@ declare namespace RenderWebGL {
 }
 
 declare class RenderWebGL {
-  // TODO
+  canvas: HTMLCanvasElement;
+
+  _xRight: number;
+  _xLeft: number;
+  _yTop: number;
+  _yBottom: number;
+
+  draw(): void;
+
+  requestSnapshot(callback: (dataURL: string) => void): void;
 }

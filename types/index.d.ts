@@ -9,3 +9,7 @@ declare module 'scratch-render' {
 declare module 'scratch-storage' {
   export = ScratchStorage;
 }
+
+declare module 'scratch-audio' {
+  export = AudioEngine;
+}

@@ -13,6 +13,12 @@ declare namespace VM {
   type IfRenderer<IsRenderer, NoRenderer> = IsRenderer;
 
   /**
+   * Indicates the type is dependent on the existence of an audio engine.
+   * We usually can assume that the audio engine exists.
+   */
+  type IfAudioEngine<IsAudioEngine, NoAudioEngine> = IsAudioEngine;
+
+  /**
    * Indicates the type is dependent of whether the VM is attached to scratch-gui.
    * For the intended use of these types, we generally assume that we are in scratch-gui.
    */
@@ -279,6 +285,12 @@ declare namespace VM {
     sprite: Sprite;
 
     renderer: IfRenderer<RenderWebGL, undefined>;
+
+    attachRenderer(renderer: RenderWebGL): void;
+
+    audioEngine: IfAudioEngine<AudioEngine, undefined>;
+
+    attachAudioEngine(audioEngine: AudioEngine): void;
 
     drawableID: number;
 
@@ -1132,6 +1144,10 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   renderer: VM.IfRenderer<RenderWebGL, undefined>;
 
+  attachRenderer(renderer: RenderWebGL): void;
+
+  attachAudioEngine(audioEngine: AudioEngine): void;
+
   extensionManager: VM.ExtensionManager;
 
   /**
@@ -1268,6 +1284,10 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   setVideoProvider(videoProvider: VM.VideoProvider): void;
 
   setCloudProvider(cloudProvider: VM.CloudProvider): void;
+
+  updateSvg(costumeIndex: number, svg: string, rotationCenterX: number, rotationCenterY: number): void;
+
+  updateBitmap(costumeIndex: number, bitmap: ImageData, rotationCenterX: number, rotationCenterY: number, bitampResolution: number): void;
 
   /**
    * @see {Runtime.scanForPeripheral}
