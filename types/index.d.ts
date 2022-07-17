@@ -5,3 +5,7 @@ declare module 'scratch-vm' {
 declare module 'scratch-render' {
   export = RenderWebGL;
 }
+
+declare module 'scratch-storage' {
+  export = ScratchStorage;
+}
