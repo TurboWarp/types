@@ -2,20 +2,24 @@
 
 Type definitions for the Scratch runtime.
 
+The hope is to make it easier to develop reliable third-party tools.
+
 ## Scope
+
+The goal is not necessarily to have in-depth descriptions of every function, but to at least have type information for the most commonly used methods.
 
 Things we want to document in the near future:
 
  - scratch-vm
  - scratch-render
- - scratch-blocks
  - sb3 project.json
 
 Things we want to document eventually, but lower priority:
 
- - scratch-storage?
+ - scratch-blocks
+ - scratch-storage
+ - scratch-audio
  - scratch-parser?
- - scratch-audio?
  - scratch-svg-render?
  - scratch-sb1-converter?
  - scratch-render-fonts?
