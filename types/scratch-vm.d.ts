@@ -172,7 +172,14 @@ declare namespace VM {
   type Variable = ScalarVariable | ListVariable | BroadcastVariable;
 
   interface Comment {
-    // TODO
+    id: string;
+    blockId: string | null;
+    minimized: boolean;
+    text: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
   }
 
   interface PostedSpriteInfo {
@@ -536,6 +543,8 @@ declare namespace VM {
     atStackTop(): boolean;
     goToNextBlock(): void;
     isRecursiveCall(procedureCode: string): boolean;
+    stackClick: boolean;
+    updateMonitor: boolean;
   }
 
   interface HatInfo {
@@ -558,6 +567,7 @@ declare namespace VM {
   interface Sequencer {
     timer: Timer;
     runtime: Runtime;
+    activeThread: Thread | null;
     stepThreads(): void;
     stepThread(thread: Thread): void;
     stepToBranch(thread: Thread, branch: number, isLoop: boolean): void;
@@ -959,6 +969,8 @@ declare namespace VM {
      */
     isWaitingThread(thread: Thread): boolean;
 
+    _getMonitorThreadCount(threads: Thread[]): number;
+
     startHats(opcode: string, matchFields?: Record<string, unknown>, target?: Target): void;
 
     toggleScript(topBlockId: string, options?: {
@@ -968,7 +980,7 @@ declare namespace VM {
 
     allScriptsDo(callback: (blockId: string, target: Target) => void, target?: Target): void;
 
-    allScriptsByOpcodeDo(opcode: string, callback: (blockId: string, target: Target), target?: Target): void;
+    allScriptsByOpcodeDo(opcode: string, callback: (blockId: string, target: Target) => void, target?: Target): void;
 
     sequencer: Sequencer;
 
@@ -1165,7 +1177,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   /**
    * Load a project usings its ID from scratch.mit.edu.
    */
-  downloadProjectId(id: string): Promise<void>;
+  downloadProjectId(id: string | number): Promise<void>;
 
   /**
    * @deprecated
@@ -1184,6 +1196,12 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    */
   exportSprite(targetId: string): Promise<Blob>;
   exportSprite(targetId: string, zipType: string): Promise<unknown>;
+
+  renameSprite(targetId: string, newName: string): void;
+
+  deleteSprite(targetId: string): void;
+
+  duplicateSprite(targetId: string): void;
 
   toJSON(targetId?: string): string;
 
