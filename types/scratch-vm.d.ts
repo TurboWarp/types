@@ -8,21 +8,18 @@ declare namespace VM {
 
   /**
    * Indicates the type is dependent on the existence of a renderer.
-   * For the intended use of these types, we generally can assume that the renderer exists.
    */
-  type IfRenderer<IsRenderer, NoRenderer> = IsRenderer;
+  type IfRenderer<HasRenderer, NoRenderer> = HasRenderer;
 
   /**
    * Indicates the type is dependent on the existence of an audio engine.
-   * We usually can assume that the audio engine exists.
    */
-  type IfAudioEngine<IsAudioEngine, NoAudioEngine> = IsAudioEngine;
+  type IfAudioEngine<HasAudioEngine, NoAudioEngine> = HasAudioEngine;
 
   /**
    * Indicates the type is dependent of whether the VM is attached to scratch-gui.
-   * For the intended use of these types, we generally assume that we are in scratch-gui.
    */
-  type IfGui<IsGui, NoGui> = IsGui;
+  type IfGui<HasGui, NoGui> = HasGui;
 
   interface Costume {
     // TODO
@@ -44,6 +41,12 @@ declare namespace VM {
     id: string | null;
     name: string;
     value: string;
+  }
+
+  interface Input {
+    name: string;
+    block: string;
+    shadow: string | null;
   }
 
   interface BaseMutation {
@@ -81,12 +84,6 @@ declare namespace VM {
      * JSON-stringified list of strings.
      */
     argumentnames: string;
-  }
-
-  interface Input {
-    name: string;
-    block: string;
-    shadow: string | null;
   }
 
   interface Block {
