@@ -4,6 +4,20 @@
 declare namespace VM {
   type ScratchCompatibleValue = string | boolean | number;
 
+  type VariableValue = ScratchCompatibleValue | ScratchCompatibleValue[];
+
+  /**
+   * Indicates the type is dependent on the existence of a renderer.
+   * For the intended use of these types, we generally can assume that the renderer exists.
+   */
+  type IfRenderer<IsRenderer, NoRenderer> = IsRenderer;
+
+  /**
+   * Indicates the type is dependent of whether the VM is attached to scratch-gui.
+   * For the intended use of these types, we generally assume that we are in scratch-gui.
+   */
+  type IfGui<IsGui, NoGui> = IsGui;
+
   interface Costume {
     // TODO
   }
@@ -14,18 +28,71 @@ declare namespace VM {
 
   interface Sprite {
     runtime: Runtime;
-
     blocks: Blocks;
-
     name: string;
-
     costumes: Costume[];
-
     sounds: Sound[];
   }
 
+  interface Field {
+    id: string | null;
+    name: string;
+    value: string;
+  }
+
+  interface BaseMutation {
+    tagName: 'mutation';
+    children: [];
+  }
+
+  /**
+   * Found on blocks with an opcode of procedures_call
+   */
+  interface ProcedureCallMutation extends BaseMutation {
+    proccode: string;
+
+    /**
+     * JSON-stringified list of strings.
+     */
+    argumentids: string;
+
+    /**
+     * JSON-stringified boolean.
+     */
+    warp: string;
+  }
+
+  /**
+   * Found on blocks with an opcode of procedures_prototype
+   */
+  interface ProcedurePrototypeMutation extends ProcedureCallMutation {
+    /**
+     * JSON-stringified list of strings.
+     */
+    argumentdefaults: string;
+
+    /**
+     * JSON-stringified list of strings.
+     */
+    argumentnames: string;
+  }
+
+  interface Input {
+    name: string;
+    block: string;
+    shadow: string | null;
+  }
+
   interface Block {
-    // TODO
+    id: string;
+    opcode: string;
+    parent: string | null;
+    next: string | null;
+    shadow: boolean;
+    topLevel: boolean;
+    inputs: Record<string, Input>;
+    fields: Record<string, Field>;
+    mutation: null | ProcedureCallMutation | ProcedurePrototypeMutation;
   }
 
   interface Blocks {
@@ -108,6 +175,17 @@ declare namespace VM {
     // TODO
   }
 
+  interface PostedSpriteInfo {
+    force?: boolean;
+    x?: number;
+    y?: number;
+    direction?: number;
+    draggable?: boolean;
+    rotationStyle?: VM.RotationStyle;
+    visible?: boolean;
+    size?: number;
+  }
+
   interface BaseTarget extends EventEmitter<{}> {
     runtime: Runtime;
 
@@ -154,6 +232,8 @@ declare namespace VM {
      */
     createVariable(id: string, name: string, type: VariableType, isCloud?: boolean): void;
 
+    postSpriteInfo(spriteInfo: PostedSpriteInfo): void;
+
     dispose(): void;
   }
 
@@ -191,7 +271,7 @@ declare namespace VM {
   interface RenderedTarget extends BaseTarget {
     sprite: Sprite;
 
-    renderer: RenderWebGL;
+    renderer: IfRenderer<RenderWebGL, undefined>;
 
     drawableID: number;
 
@@ -254,9 +334,9 @@ declare namespace VM {
      */
     setSize(size: number): void;
 
-    getBounds(): RenderWebGL.Rectangle;
+    getBounds(): IfRenderer<RenderWebGL.Rectangle, null>;
 
-    getBoundsForBubble(): RenderWebGL.Rectangle;
+    getBoundsForBubble(): IfRenderer<RenderWebGL.Rectangle, null>;
 
     draggable: boolean;
 
@@ -357,7 +437,7 @@ declare namespace VM {
      */
     colorIsTouchingColor(rgb: [number, number, number], mask: [number, number, number]): boolean;
 
-    getLayerOrder(): number;
+    getLayerOrder(): IfRenderer<number, null>;
 
     /**
      * Make sure this target is not the stage before calling this method.
@@ -421,12 +501,46 @@ declare namespace VM {
     // TODO
   }
 
-  interface Thread {
+  interface StackFrame {
     // TODO
   }
 
+  const enum ThreadStatus {
+    STATUS_RUNNING = 0,
+    STATUS_PROMISE_WAIT = 1,
+    STATUS_YIELD = 2,
+    STATUS_YIELD_TICK = 3,
+    STATUS_DONE = 4
+  }
+
+  interface Thread {
+    topBlock: string;
+    stack: string[];
+    stackFrames: StackFrame[];
+    status: ThreadStatus;
+    isKilled: boolean;
+    target: Target;
+    blockContainer: Blocks;
+    requestScriptGlowInFrame: boolean;
+    blockGlowInFrame: string | null;
+    warpTimer: Timer | null;
+    justReported: unknown;
+    pushStack(blockId: string): void;
+    popStack(): string;
+    peekStack(): string;
+    peekStackFrame(): StackFrame | null;
+    peekParentStackFrame(): StackFrame | null;
+    initParams(): void;
+    pushParam(name: string, value: ScratchCompatibleValue): void;
+    getParam(name: string): ScratchCompatibleValue | null;
+    atStackTop(): boolean;
+    goToNextBlock(): void;
+    isRecursiveCall(procedureCode: string): boolean;
+  }
+
   interface HatInfo {
-    // TODO
+    edgeActivated?: boolean;
+    restartExistingThreads?: boolean;
   }
 
   interface ExtensionInfo {
@@ -442,7 +556,186 @@ declare namespace VM {
   }
 
   interface Sequencer {
+    timer: Timer;
+    runtime: Runtime;
+    stepThreads(): void;
+    stepThread(thread: Thread): void;
+    stepToBranch(thread: Thread, branch: number, isLoop: boolean): void;
+    stepToProcedure(thread: Thread, procedureCode: string): void;
+    retireThread(thread: Thread): void;
+  }
+
+  interface ExtensionManager {
+    runtime: Runtime;
+
+    isExtensionLoaded(extensionID: string): boolean;
+
+    /**
+     * Load a builtin extension.
+     * Logs a warning if the extension is already loaded or could not be found.
+     */
+    loadExtensionIdSync(extensionID: string): void;
+
+    /**
+     * Load a remote extension. Does not work on scratch.mit.edu.
+     */
+    loadExtensionURL(extensionID: string): void;
+  }
+
+  /**
+   * Timer operates on milliseconds.
+   */
+  interface Timer {
+    startTime: number;
+
+    time(): number;
+
+    relativeTime(): number;
+
+    start(): void;
+
+    timeElapsed(): number;
+
+    /**
+     * @see {window.setTimeout}
+     */
+    setTimeout(callback: () => void, timeoutMS: number): number;
+
+    /**
+     * @see {window.clearTImeout}
+     */
+    clearTimeout(timeoutID: number): void;
+  }
+
+  interface Clock {
+    _projectTimer: Timer;
+
+    _paused: boolean;
+
+    _pausedTime: number | null;
+
+    runtime: Runtime;
+
+    /**
+     * Project's current time in seconds.
+     */
+    projectTimer(): number;
+
+    pause(): void;
+
+    resume(): void;
+
+    resetProjectTimer(): void;
+  }
+
+  interface CloudProvider {
+    createVariable(name: string, value: ScratchCompatibleValue): void;
+    updateVariable(name: string, value: ScratchCompatibleValue): void;
+    renameVariable(oldName: string, newName: string): void;
+    deleteVariable(name: string): void;
+    requestCloseConnection(): void;
+  }
+
+  interface CloudVariableUpdate {
+    name: string;
+    value: ScratchCompatibleValue;
+  }
+
+  interface CloudData {
+    varUpdate: CloudVariableUpdate;
+  }
+
+  interface Cloud {
+    runtime: Runtime;
+    provider: CloudProvider | null;
+    setProvider(provider: CloudProvider | null): void;
+    stage: Target | null;
+    setStage(stage: Target | null): void;
+    postData(data: CloudData): void;
+    requestCreateVariable(variable: ScalarVariable): void;
+    requestUpdateVariable(name: string, value: ScratchCompatibleValue): void;
+    requestRenameVariable(oldName: string, newName: string): void;
+    requestDeleteVariable(name: string): void;
+    updateCloudVariable(varUpdate: CloudVariableUpdate): void;
+    clear(): void;
+  }
+
+  interface KeyboardData {
+    key: string;
+    isDown: boolean;
+  }
+
+  interface Keyboard {
+    runtime: Runtime;
+    postData(data: KeyboardData): void;
+    _keyStringToScratchKey(key: string): string;
+    _keyArgToScratchKey(key: string | number): string;
+    getKeyIsDown(key: string | number): boolean;
+  }
+
+  interface MouseData {
+    x?: number;
+    y?: number;
+    canvasWidth?: number;
+    canvasHeight?: number;
+    isDown?: boolean;
+  }
+
+  interface Mouse {
+    runtime: Runtime;
+    _clientX: number;
+    _clientY: number;
+    getClientX(): number;
+    getClientY(): number;
+    _scratchX: number;
+    _scratchY: number;
+    getScratchX(): number;
+    getScratchY(): number;
+    _isDown: boolean;
+    getIsDown(): boolean;
+    postData(data: MouseData): void;
+  }
+
+  interface MouseWheelData {
+    deltaY: number;
+  }
+
+  interface MouseWheel {
+    runtime: Runtime;
+    postData(data: MouseWheelData): void;
+  }
+
+  interface UserDataData {
+    username: string;
+  }
+
+  interface UserData {
+    _username: string;
+    getUsername(): string;
+    postData(data: UserData): void;
+  }
+
+  interface VideoProvider {
     // TODO
+  }
+
+  interface VideoData {
+    // TODO
+  }
+
+  interface Video {
+    // TODO
+    postData(data: VideoData): void;
+  }
+
+  interface IODevices {
+    clock: Clock;
+    cloud: Cloud;
+    keyboard: Keyboard;
+    mouse: Mouse;
+    mouseWheel: MouseWheel;
+    userData: UserData;
+    video: Video;
   }
 
   interface RuntimeAndVirtualMachineEventMap {
@@ -587,9 +880,25 @@ declare namespace VM {
      */
     _step(): void;
 
+    renderer: IfRenderer<RenderWebGL, undefined>;
+
+    storage: IfGui<GUIScratchStorage, ScratchStorage>;
+
     targets: Target[];
 
     executableTargets: Target[];
+
+    addTarget(target: Target): void;
+
+    moveExecutable(target: Target, delta: number): void;
+
+    setExecutablePosition(target: Target, newIndex: number): void;
+
+    removeExecutable(target: Target): void;
+
+    disposeTarget(target: Target): void;
+
+    stopForTarget(target: Target): void;
 
     /**
      * Returns the target that is the stage.
@@ -627,6 +936,40 @@ declare namespace VM {
 
     threads: Thread[];
 
+    _pushThread(topBlockId: string, target: Target, options?: {
+      stackClick?: boolean;
+      updateMonitor?: boolean;
+    }): Thread;
+
+    _stopThread(thread: Thread): void;
+
+    _restartThread(thread: Thread): void;
+
+    /**
+     * A thread is considered active if it is in the thread list and is not STATUS_DONE.
+     */
+    isActiveThread(thread: Thread): boolean;
+
+    /**
+     * A thread is considered waiting if:
+     *  - It is in STATUS_PROMISE_WAIT, or
+     *  - It is in STATUS_YIELD_TICK, or
+     *  - It is not considered active
+     * @see {isActiveThread}
+     */
+    isWaitingThread(thread: Thread): boolean;
+
+    startHats(opcode: string, matchFields?: Record<string, unknown>, target?: Target): void;
+
+    toggleScript(topBlockId: string, options?: {
+      target?: string;
+      stackClick?: boolean;
+    }): void;
+
+    allScriptsDo(callback: (blockId: string, target: Target) => void, target?: Target): void;
+
+    allScriptsByOpcodeDo(opcode: string, callback: (blockId: string, target: Target), target?: Target): void;
+
     sequencer: Sequencer;
 
     flyoutBlocks: Blocks;
@@ -636,6 +979,18 @@ declare namespace VM {
     visualReport(blockId: string, value: any): void;
 
     _primitives: Record<string, Function>;
+
+    getOpcodeFunction(opcode: string): Function;
+
+    getLabelForOpcode(opcode: string): {
+      category: 'extension';
+      label: string;
+    } | undefined;
+
+    getBlocksXML(target?: Target): Array<{
+      id: string;
+      xml: string;
+    }>;
 
     _blockInfo: ExtensionInfo[];
 
@@ -662,6 +1017,8 @@ declare namespace VM {
     currentMSecs: number;
 
     updateCurrentMSecs(): void;
+
+    ioDevices: IODevices;
 
     /**
      * Returns true if the runtime's cloud variable counter is non-zero.
@@ -692,6 +1049,14 @@ declare namespace VM {
      */
     removeCloudVariable(): void;
 
+    createNewGlobalVariable(variableName: string): ScalarVariable;
+    createNewGlobalVariable(variableName: string, variableId: string): ScalarVariable;
+    createNewGlobalVariable(variableName: string, variableId: string, type: ''): ScalarVariable;
+    createNewGlobalVariable(variableName: string, variableId: string, type: 'list'): ListVariable;
+    createNewGlobalVariable(variableName: string, variableId: string, type: 'broadcast_msg'): BroadcastVariable;
+
+    getAllVarNamesOfType(variableType: VariableType): string[];
+
     origin: string | null;
 
     /**
@@ -712,6 +1077,14 @@ declare namespace VM {
     getEditingTarget(): Target | null;
 
     setEditingTarget(target: Target): void;
+
+    scanForPeripheral(extensionID: string): void;
+
+    connectPeripheral(extensionID: string, peripheralId: number): void;
+
+    disconnectPeripheral(extensionID: string): void;
+
+    getPeripheralIsConnected(extensionID: string): boolean;
 
     profiler: Profiler | null;
     enableProfiling(callback: (profilerFrame: unknown) => void): void;
@@ -744,6 +1117,10 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   constructor();
 
   runtime: VM.Runtime;
+
+  renderer: VM.IfRenderer<RenderWebGL, undefined>;
+
+  extensionManager: VM.ExtensionManager;
 
   /**
    * @see {Runtime.start}
@@ -780,19 +1157,15 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   clear(): void;
 
   /**
-   * Send data to one of the runtime's IO devices.
-   * If the device doesn't exist, silently does nothing.
-   * @param device The name of the device to send data to.
-   * @param data The data to be sent. Type depends on the device being sent data.
-   * TODO: type this better
-   */
-  postIOData(device: string, data: unknown): void;
-
-  /**
    * Load a project.
    * @param input Compressed sb, sb2, sb3 or sb2 project.json or sb3 project.json.
    */
   loadProject(input: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
+
+  /**
+   * Load a project usings its ID from scratch.mit.edu.
+   */
+  downloadProjectId(id: string): Promise<void>;
 
   /**
    * @deprecated
@@ -837,8 +1210,64 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   setEditingTarget(targetId: string): void;
 
   /**
+   * The target that's currently being dragged, if any.
+   */
+  _dragTarget: VM.Target | null;
+
+  /**
    * Updates the value of a variable.
    * Returns true if the target and variable were successfully found and updated, otherwise null.
    */
-  setVariableValue(targetId: string, variableId: string, value: VM.ScratchCompatibleValue | VM.ScratchCompatibleValue[]): boolean;
+  setVariableValue(targetId: string, variableId: string, value: VM.VariableValue): boolean;
+
+  getVariableValue(targetId: string, variableId: string): VM.VariableValue | null;
+
+  getTargetIdForDrawableId(drawableId: number): string | null;
+
+  /**
+   * Post sprite info to the target that's being dragged, otherwise the editing target.
+   * @see {VM.Target.postSpriteInfo}
+   */
+  postSpriteInfo(spriteInfo: VM.PostedSpriteInfo): void;
+
+  startDrag(targetId: string): void;
+
+  stopDrag(targetId: string): void;
+
+  reorderTarget(targetId: string, newIndex: number): boolean;
+
+  reorderCostume(targetId: string, costumeIndex: number, newIndex: number): boolean;
+
+  reorderSound(targetId: string, soundIndex: number, newIndex: number): boolean;
+
+  postIOData(device: 'cloud', data: VM.CloudData): void;
+  postIOData(device: 'keyboard', data: VM.KeyboardData): void;
+  postIOData(device: 'mouse', data: VM.MouseData): void;
+  postIOData(device: 'mouseWheel', data: VM.MouseWheelData): void;
+  postIOData(device: 'userData', data: VM.UserDataData): void;
+  postIOData(device: 'video', data: VM.VideoData): void;
+
+  setVideoProvider(videoProvider: VM.VideoProvider): void;
+
+  setCloudProvider(cloudProvider: VM.CloudProvider): void;
+
+  /**
+   * @see {Runtime.scanForPeripheral}
+   */
+  scanForPeripheral(extensionID: string): void;
+
+  /**
+   * @see {Runtime.connectPeripheral}
+   */
+  connectPeripheral(extensionID: string, peripheralId: number): void;
+
+  /**
+   * @see {Runtime.disconnectPeripheral}
+   */
+  disconnectPeripheral(extensionID: string): void;
+
+  /**
+   * @see {Runtime.getPeripheralIsConnected}
+   */
+  getPeripheralIsConnected(extensionID: string): boolean;
 }

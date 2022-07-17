@@ -29,6 +29,15 @@ if (target) {
   target.lookupVariableById('#@)$(*%)(#').id;
 
   target.effects.ghost += 10;
+
+  const block = target.blocks.getBlock('123');
+  if (!block) {
+    throw new Error('no block :(');
+  }
+  if (block.opcode === 'procedures_call') {
+    const mutation = block.mutation as VM.ProcedureCallMutation;
+    JSON.parse(mutation.argumentids);
+  }
 } else {
   const doesNotExist: undefined = target;
 }
