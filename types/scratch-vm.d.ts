@@ -473,7 +473,10 @@ declare namespace VM {
 
     PROJECT_CHANGED: [];
 
-    VISUAL_REPORT: [];
+    VISUAL_REPORT: [{
+      id: string;
+      value: string;
+    }];
 
     MONITORS_UPDATE: [OrderedMap];
 
@@ -650,6 +653,8 @@ declare namespace VM {
 
     currentStepTime: number;
 
+    _steppingInterval: number;
+
     redrawRequested: boolean;
 
     requestRedraw(): void;
@@ -703,6 +708,10 @@ declare namespace VM {
     emitProjectLoaded(): void;
 
     emitProjectChanged(): void;
+
+    getEditingTarget(): Target | null;
+
+    setEditingTarget(target: Target): void;
 
     profiler: Profiler | null;
     enableProfiling(callback: (profilerFrame: unknown) => void): void;
@@ -817,7 +826,19 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   emitWorkspaceUpdate(): void;
 
   /**
-   * The target open in the editor. This will be null before a project has loaded.
+   * @see {VM.Runtime.getEditingTarget}
    */
   editingTarget: VM.Target | null;
+
+  /**
+   * Change the editing target. If a target with the ID doesn't exist, silently does nothing.
+   * @see {VM.Runtime.setEditingTarget}
+   */
+  setEditingTarget(targetId: string): void;
+
+  /**
+   * Updates the value of a variable.
+   * Returns true if the target and variable were successfully found and updated, otherwise null.
+   */
+  setVariableValue(targetId: string, variableId: string, value: VM.ScratchCompatibleValue | VM.ScratchCompatibleValue[]): boolean;
 }
