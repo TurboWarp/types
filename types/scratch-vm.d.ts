@@ -17,16 +17,45 @@ declare namespace VM {
   type IfAudioEngine<HasAudioEngine, NoAudioEngine> = HasAudioEngine;
 
   /**
+   * Indicates thte type is dependent on the existence of an attached storage.
+   */
+  type IfStorage<HasStorage, NoStorage> = HasStorage;
+
+  /**
    * Indicates the type is dependent of whether the VM is attached to scratch-gui.
    */
   type IfGui<HasGui, NoGui> = HasGui;
 
-  interface Costume {
-    // TODO
+  interface BaseAsset {
+    /**
+     * The md5 of this asset.
+     */
+    assetId: string;
+
+    /**
+     * The md5 + file extension of this asset.
+     */
+    md5: string;
+
+    name: string;
+
+    asset: ScratchStorage.Asset;
   }
 
-  interface Sound {
-    // TODO
+  interface Costume extends BaseAsset {
+    dataFormat: 'svg' | 'png' | 'jpg';
+    bitmapResolution: number;
+    rotationCenterX: number;
+    rotationCenterY: number;
+    size: [number, number];
+  }
+
+  interface Sound extends BaseAsset {
+    dataFormat: 'mp3' | 'wav';
+    format: ''; // TODO
+    rate: number;
+    sampleCount: number;
+    soundId: string;
   }
 
   interface Sprite {
@@ -288,6 +317,10 @@ declare namespace VM {
     audioEngine: IfAudioEngine<AudioEngine, undefined>;
 
     attachAudioEngine(audioEngine: AudioEngine): void;
+
+    storage: IfStorage<ScratchStorage, undefined>;
+
+    attachStorage(storage: ScratchStorage): void;
 
     drawableID: number;
 
@@ -582,6 +615,11 @@ declare namespace VM {
     stepToBranch(thread: Thread, branch: number, isLoop: boolean): void;
     stepToProcedure(thread: Thread, procedureCode: string): void;
     retireThread(thread: Thread): void;
+  }
+
+  interface ImportedExtensionsInfo {
+    extensionIDs: string[];
+    extensionURLs: string[];
   }
 
   interface ExtensionManager {
@@ -1151,6 +1189,8 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   attachAudioEngine(audioEngine: AudioEngine): void;
 
+  attachStorage(storage: ScratchStorage): void;
+
   extensionManager: VM.ExtensionManager;
 
   /**
@@ -1198,6 +1238,10 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    */
   downloadProjectId(id: string | number): Promise<void>;
 
+  deserializeProject(json: object, zip?: JSZip): Promise<void>;
+
+  installTargets(targets: VM.Target[], extensions: VM.ImportedExtensionsInfo, wholeProject: boolean): Promise<void>;
+
   /**
    * @deprecated
    * @see {loadProject}
@@ -1209,31 +1253,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    */
   saveProjectSb3(): Promise<Blob>;
 
-  /**
-   * a specific sprite to a compressed sprite3 file.
-   * @param targetId The ID of the target
-   */
-  exportSprite(targetId: string): Promise<Blob>;
-  exportSprite(targetId: string, zipType: string): Promise<unknown>;
-
-  renameSprite(targetId: string, newName: string): void;
-
-  deleteSprite(targetId: string): void;
-
-  duplicateSprite(targetId: string): void;
-
   toJSON(targetId?: string): string;
-
-  /**
-   * Emit a targetsUpdate event about the current target information.
-   * @param shouldTriggerProjectChange Whether a PROJECT_CHANGED event should be emitted. Defaults to true.
-   */
-  emitTargetsUpdate(shouldTriggerProjectChange?: boolean): void;
-
-  /**
-   * Emit a workspaceUpdate event.
-   */
-  emitWorkspaceUpdate(): void;
 
   /**
    * @see {VM.Runtime.getEditingTarget}
@@ -1246,10 +1266,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    */
   setEditingTarget(targetId: string): void;
 
-  /**
-   * The target that's currently being dragged, if any.
-   */
-  _dragTarget: VM.Target | null;
+  getTargetIdForDrawableId(drawableId: number): string | null;
 
   /**
    * Updates the value of a variable.
@@ -1259,23 +1276,128 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   getVariableValue(targetId: string, variableId: string): VM.VariableValue | null;
 
-  getTargetIdForDrawableId(drawableId: number): string | null;
+  assets: ScratchStorage.Asset[];
 
   /**
-   * Post sprite info to the target that's being dragged, otherwise the editing target.
-   * @see {VM.Target.postSpriteInfo}
+   * Export a specific sprite to a compressed sprite3 file.
+   * @param targetId The ID of the target
    */
-  postSpriteInfo(spriteInfo: VM.PostedSpriteInfo): void;
+  exportSprite(targetId: string): Promise<Blob>;
+  exportSprite(targetId: string, zipType: string): Promise<unknown>;
 
-  startDrag(targetId: string): void;
+  /**
+   * Gets the string representation of a costume.
+   * For an SVG costume, returns the text.
+   * For a PNG or JPG costume, returns a data URL.
+   * If costume doesn't exist, returns null.
+   */
+  getCostume(costumeIndex: number): string | null;
 
-  stopDrag(targetId: string): void;
+  getSoundBuffer(soundIndex: number): AudioBuffer | null;
+
+  /**
+   * Loads a sprite from a compressed .sprite2 or .sprite3 or JSON.
+   */
+  addSprite(data: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
+
+  addCostume(md5ext: string, costume?: VM.Costume, targetId?: string, version?: 2): Promise<void>;
+
+  addCostumeFromLibrary(md5ext: string, costume: VM.Costume): Promise<void>;
+
+  addBackdrop(md5ext: string, costume?: VM.Costume): Promise<void>;
+
+  addSound(sound: VM.Sound, targetId?: string): Promise<void>;
+
+  duplicateSprite(targetId: string): Promise<void>;
+
+  duplicateCostume(costumeIndex: number): Promise<void>;
+
+  duplicateSound(soundIndex: number): Promise<void>;
+
+  updateSvg(costumeIndex: number, svg: string, rotationCenterX: number, rotationCenterY: number): void;
+
+  updateBitmap(costumeIndex: number, bitmap: ImageData, rotationCenterX: number, rotationCenterY: number, bitampResolution: number): void;
+
+  /**
+   * Update a sound.
+   * @param soundIndex The index of the sound in the current sprite
+   * @param buffer The new audio data
+   * @param encodedWAV The data of an encoded WAV. If not provided, the new sound won't be saved if the project is exported.
+   */
+  updateSoundBuffer(soundIndex: number, buffer: AudioBuffer, encodedWAV?: ArrayBuffer): void;
 
   reorderTarget(targetId: string, newIndex: number): boolean;
 
   reorderCostume(targetId: string, costumeIndex: number, newIndex: number): boolean;
 
   reorderSound(targetId: string, soundIndex: number, newIndex: number): boolean;
+
+  renameSprite(targetId: string, newName: string): void;
+
+  renameCostume(costumeIndex: number, newName: string): void;
+
+  renameSound(soundIndex: number, newName: string): void;
+
+  /**
+   * Deletes the target with the given ID and any of its clones.
+   * @returns If a sprite was deleted, returns a function to undo the deletion.
+   */
+  deleteSprite(targetId: string): (() => void) | null;
+
+  /**
+   * Deletes the costume at a given index int he editing target.
+   * @returns If a costume was deleted, returns a function to undo the deletion.
+   */
+  deleteCostume(costumeIndex: number): (() => void) | null;
+
+  /**
+   * Deletes the sound at a given index in the editing target.
+   * @returns If a sound was deleted, returns a function to undo the deletion.
+   */
+  deleteSound(soundIndex: number): (() => void) | null;
+
+  /**
+   * Returns a promise that resolves when all required extensions have been imported.
+   */
+  shareBlocksToTarget(blocks: VM.Block[], targetId: string, fromTargetId?: string): Promise<void>;
+
+  /**
+   * Share a costume from the editing target to another target.
+   */
+  shareCostumeToTarget(costumeIndex: number, targetId: string): Promise<void>;
+
+  /**
+   * Share a sound from the editing target to another target.
+   */
+  shareSoundToTarget(soundIndex: number, targetId: string): Promise<void>;
+
+  refreshWorkspace(): void;
+
+  /**
+   * Emit a targetsUpdate event about the current target information.
+   * @param shouldTriggerProjectChange Whether a PROJECT_CHANGED event should be emitted. Defaults to true.
+   */
+  emitTargetsUpdate(shouldTriggerProjectChange?: boolean): void;
+
+  /**
+  * Emit a workspaceUpdate event.
+  */
+  emitWorkspaceUpdate(): void;
+   
+  /**
+   * Post sprite info to the target that's being dragged, otherwise the editing target.
+   * @see {VM.Target.postSpriteInfo}
+   */
+  postSpriteInfo(spriteInfo: VM.PostedSpriteInfo): void;
+
+  /**
+   * The target that's currently being dragged, if any.
+   */
+  _dragTarget: VM.Target | null;
+
+  startDrag(targetId: string): void;
+
+  stopDrag(targetId: string): void;
 
   postIOData(device: 'cloud', data: VM.CloudData): void;
   postIOData(device: 'keyboard', data: VM.KeyboardData): void;
@@ -1287,10 +1409,6 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   setVideoProvider(videoProvider: VM.VideoProvider): void;
 
   setCloudProvider(cloudProvider: VM.CloudProvider): void;
-
-  updateSvg(costumeIndex: number, svg: string, rotationCenterX: number, rotationCenterY: number): void;
-
-  updateBitmap(costumeIndex: number, bitmap: ImageData, rotationCenterX: number, rotationCenterY: number, bitampResolution: number): void;
 
   /**
    * @see {Runtime.scanForPeripheral}

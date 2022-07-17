@@ -1,5 +1,7 @@
 declare namespace ScratchStorage {
-  // TODO
+  interface Asset {
+    // TODO
+  }
 }
 
 declare class ScratchStorage {
