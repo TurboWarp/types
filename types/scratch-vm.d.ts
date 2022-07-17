@@ -879,6 +879,12 @@ declare namespace VM {
     ];
 
     targetWasRemoved: [Target];
+
+    SAY: [Target, 'say' | 'think', string];
+
+    QUESTION: [string | null];
+
+    ANSWER: [string];
   }
 
   interface Runtime extends EventEmitter<RuntimeEventMap> {
