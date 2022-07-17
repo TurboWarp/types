@@ -1,0 +1,26 @@
+{
+  "name": "@turbowarp/types",
+  "version": "0.0.1",
+  "description": "Type definitions for the Scratch runtime.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "tsc",
+    "watch": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TurboWarp/types.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TurboWarp/types/issues"
+  },
+  "homepage": "https://github.com/TurboWarp/types#readme",
+  "dependencies": {
+    "typescript": "^4.7.4"
+  }
+}

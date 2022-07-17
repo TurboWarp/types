@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": true
+  },
+
+  "include": [
+    "types/**/*",
+    "tests/**/*"
+  ]
+}
