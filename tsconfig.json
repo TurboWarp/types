@@ -12,6 +12,7 @@
 
   "include": [
     "types/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "index.d.ts"
   ]
 }

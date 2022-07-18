@@ -1,6 +1,13 @@
 // Type definitions for scratch-vm
 // Project: https://github.com/LLK/scratch-vm
 
+/// <reference path="./events.d.ts" />
+/// <reference path="./immutable.d.ts" />
+/// <reference path="./jszip.d.ts" />
+/// <reference path="./scratch-render.d.ts" />
+/// <reference path="./scratch-audio.d.ts" />
+/// <reference path="./scratch-storage.d.ts" />
+
 declare namespace VM {
   type ScratchCompatibleValue = string | boolean | number;
 

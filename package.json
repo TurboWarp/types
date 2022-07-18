@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Type definitions for the Scratch runtime.",
   "main": "index.js",
+  "types": "index.d.ts",
   "directories": {
     "test": "tests"
   },
