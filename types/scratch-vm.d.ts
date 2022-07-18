@@ -613,6 +613,10 @@ declare namespace VM {
     // TODO
   }
 
+  interface ProfilerFrame {
+    // TODO
+  }
+
   interface Sequencer {
     timer: Timer;
     runtime: Runtime;
@@ -1159,7 +1163,7 @@ declare namespace VM {
     getPeripheralIsConnected(extensionID: string): boolean;
 
     profiler: Profiler | null;
-    enableProfiling(callback: (profilerFrame: unknown) => void): void;
+    enableProfiling(callback: (profilerFrame: ProfilerFrame) => void): void;
     disableProfiling(): void;
   }
 
