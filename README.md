@@ -33,6 +33,53 @@ Things that are out of scope:
  - scratch-l10n
  - api.scratch.mit.edu
 
+## Using from npm
+
+WIP - Not ready yet
+
+You can tell TypeScript to use these types when you import scratch-vm, scratch-render, etc.
+
+```json
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "allowSyntheticDefaultImports": true,
+
+    // Tell TypeScript where to find the types for Scratch libraries
+    "paths": {
+      "scratch-vm": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-render": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-storage": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-audio": ["./node_modules/@turbowarp/types/index.d.ts"],
+    },
+
+    // Recommended strictness settings
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true
+  }
+}
+```
+
+Then in your TypeScript:
+
+```ts
+import VM from 'scratch-vm';
+import RenderWebGL from 'scratch-render';
+import AudioEngine from 'scratch-audio';
+import ScratchStorage from 'scratch-storage';
+
+const vm = new VM();
+vm.attachRenderer(new RenderWebGL());
+vm.attachAudioEngine(new AudioEngine());
+vm.attachStorage(new ScratchStorage());
+vm.loadProject(/* load a project somehow */ new ArrayBuffer(100))
+  .then(() => {
+    vm.start();
+    vm.greenFlag();
+  });
+```
+
 ## Tests
 
 There are some tests in the tests folder. These files are never actually run, but the code will be type checked.
