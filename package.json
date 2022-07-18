@@ -21,7 +21,8 @@
     "url": "https://github.com/TurboWarp/types/issues"
   },
   "homepage": "https://github.com/TurboWarp/types#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "typescript": "^4.7.4"
   }
 }
