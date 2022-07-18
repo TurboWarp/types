@@ -1,4 +1,5 @@
 import VM from 'scratch-vm';
+import AudioEngine from 'scratch-audio';
 
 const vm = new VM();
 const runtime = vm.runtime;
@@ -41,3 +42,7 @@ if (target) {
 } else {
   const doesNotExist: undefined = target;
 }
+
+const audioEngine = new AudioEngine();
+vm.attachAudioEngine(audioEngine);
+audioEngine.audioContext.suspend();

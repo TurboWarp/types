@@ -319,16 +319,6 @@ declare namespace VM {
 
     renderer: IfRenderer<RenderWebGL, undefined>;
 
-    attachRenderer(renderer: RenderWebGL): void;
-
-    audioEngine: IfAudioEngine<AudioEngine, undefined>;
-
-    attachAudioEngine(audioEngine: AudioEngine): void;
-
-    storage: IfStorage<ScratchStorage, undefined>;
-
-    attachStorage(storage: ScratchStorage): void;
-
     drawableID: number;
 
     isOriginal: boolean;
@@ -956,7 +946,15 @@ declare namespace VM {
 
     renderer: IfRenderer<RenderWebGL, undefined>;
 
+    attachRenderer(renderer: RenderWebGL): void;
+
+    audioEngine: IfAudioEngine<AudioEngine, undefined>;
+
+    attachAudioEngine(audioEngine: AudioEngine): void;
+
     storage: IfGui<GUIScratchStorage, ScratchStorage>;
+
+    attachStorage(storage: ScratchStorage): void;
 
     targets: Target[];
 
@@ -1196,21 +1194,30 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   renderer: VM.IfRenderer<RenderWebGL, undefined>;
 
+  /**
+   * @see {VM.Runtime.attachRenderer}
+   */
   attachRenderer(renderer: RenderWebGL): void;
 
+  /**
+   * @see {VM.Runtime.attachAudioEngine}
+   */
   attachAudioEngine(audioEngine: AudioEngine): void;
 
+  /**
+   * @see {VM.Runtime.attachStorage}
+   */
   attachStorage(storage: ScratchStorage): void;
 
   extensionManager: VM.ExtensionManager;
 
   /**
-   * @see {Runtime.start}
+   * @see {VM.Runtime.start}
    */
   start(): void;
 
   /**
-   * @see {Runtime.greenFlag}
+   * @see {VM.Runtime.greenFlag}
    */
   greenFlag(): void;
 
@@ -1422,22 +1429,22 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   setCloudProvider(cloudProvider: VM.CloudProvider): void;
 
   /**
-   * @see {Runtime.scanForPeripheral}
+   * @see {VM.Runtime.scanForPeripheral}
    */
   scanForPeripheral(extensionID: string): void;
 
   /**
-   * @see {Runtime.connectPeripheral}
+   * @see {VM.Runtime.connectPeripheral}
    */
   connectPeripheral(extensionID: string, peripheralId: number): void;
 
   /**
-   * @see {Runtime.disconnectPeripheral}
+   * @see {VM.Runtime.disconnectPeripheral}
    */
   disconnectPeripheral(extensionID: string): void;
 
   /**
-   * @see {Runtime.getPeripheralIsConnected}
+   * @see {VM.Runtime.getPeripheralIsConnected}
    */
   getPeripheralIsConnected(extensionID: string): boolean;
 }
