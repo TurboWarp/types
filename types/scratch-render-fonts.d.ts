@@ -1,0 +1,3 @@
+declare namespace ScratchRenderFonts {
+  // TODO
+}

@@ -14,9 +14,12 @@ We want to type and document all public APIs in:
 
  - scratch-vm
  - scratch-render
+ - scratch-svg-render
+ - scratch-render-fonts
  - scratch-audio
  - scratch-storage
  - scratch-parser
+ - scratch-blocks
 
 ## Using from npm
 
@@ -34,8 +37,12 @@ You can tell TypeScript to use these types when you import scratch-vm, scratch-r
     "paths": {
       "scratch-vm": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-render": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-svg-render": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-render-fonts": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-storage": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-audio": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-parser": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-blocks": ["./node_modules/@turbowarp/types/index.d.ts"]
     },
 
     // Recommended strictness settings

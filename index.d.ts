@@ -1,19 +1,40 @@
 /// <reference path="./types/scratch-vm.d.ts" />
+/// <reference path="./types/scratch-svg-render.d.ts" />
+/// <reference path="./types/scratch-render.d.ts" />
+/// <reference path="./types/scratch-render-fonts.d.ts" />
+/// <reference path="./types/scratch-audio.d.ts" />
+/// <reference path="./types/scratch-storage.d.ts" />
+/// <reference path="./types/scratch-parser.d.ts" />
+/// <reference path="./types/scratch-blocks.d.ts" />
+
 declare module 'scratch-vm' {
   export = VM;
 }
 
-/// <reference path="./types/scratch-render.d.ts" />
 declare module 'scratch-render' {
   export = RenderWebGL;
 }
 
-/// <reference path="./types/scratch-audio.d.ts" />
+declare module 'scratch-svg-render' {
+  export = ScratchSVGRender;
+}
+
+declare module 'scratch-render-fonts' {
+  export = ScratchRenderFonts;
+}
+
 declare module 'scratch-audio' {
   export = AudioEngine;
 }
 
-/// <reference path="./types/scratch-storage.d.ts" />
 declare module 'scratch-storage' {
   export = ScratchStorage;
+}
+
+declare module 'scratch-parser' {
+  export = ScratchParser;
+}
+
+declare module 'scratch-blocks' {
+  export = ScratchBlocks;
 }
