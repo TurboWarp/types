@@ -27,7 +27,7 @@ Not ready yet.
 
 You can tell TypeScript to use these types when you import scratch-vm, scratch-render, etc.
 
-```json
+```json5
 {
   "compilerOptions": {
     "module": "ES6",
