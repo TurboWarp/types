@@ -1,41 +1,26 @@
 # Types
 
-Type definitions for the Scratch runtime.
+Type definitions and documentation for the Scratch runtime because Scratch doesn't provide them.
 
 The hope is to make it easier to develop reliable third-party tools.
 
+This project is still at an early stage.
+
 ## Scope
 
-The goal is not necessarily to have in-depth descriptions of every function, but to at least have type information for the most commonly used methods.
+Despite being in the TurboWarp organization, this project currently only wants to document the vanilla Scratch runtime. Additional types for the TurboWarp runtime will be added later.
 
-Things we want to document in the near future:
+We want to type and document all public APIs in:
 
  - scratch-vm
  - scratch-render
- - sb3 project.json
-
-Things we want to document eventually, but lower priority:
-
- - scratch-blocks
- - scratch-storage
  - scratch-audio
- - scratch-parser?
- - scratch-svg-render?
- - scratch-sb1-converter?
- - scratch-render-fonts?
- - TurboWarp
-
-Things that are out of scope:
-
- - scratch-paint
- - scratch-gui
- - scratch-www
- - scratch-l10n
- - api.scratch.mit.edu
+ - scratch-storage
+ - scratch-parser
 
 ## Using from npm
 
-WIP - Not ready yet
+Not ready yet.
 
 You can tell TypeScript to use these types when you import scratch-vm, scratch-render, etc.
 
