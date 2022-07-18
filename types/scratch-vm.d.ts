@@ -1334,7 +1334,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   updateSvg(costumeIndex: number, svg: string, rotationCenterX: number, rotationCenterY: number): void;
 
-  updateBitmap(costumeIndex: number, bitmap: ImageData, rotationCenterX: number, rotationCenterY: number, bitampResolution: number): void;
+  updateBitmap(costumeIndex: number, bitmap: ImageData, rotationCenterX: number, rotationCenterY: number, bitmapResolution: number): void;
 
   /**
    * Update a sound.
