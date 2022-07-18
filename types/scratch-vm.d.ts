@@ -1080,7 +1080,7 @@ declare namespace VM {
 
     currentStepTime: number;
 
-    _steppingInterval: number;
+    _steppingInterval: number | null;
 
     redrawRequested: boolean;
 
