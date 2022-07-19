@@ -1080,8 +1080,14 @@ declare namespace VM {
 
     clonesAvailable(): boolean;
 
-    currentStepTime: number;
+    /**
+     * The time of a step, measured in milliseconds. null if accessed before the project has started.
+     */
+    currentStepTime: number | null;
 
+    /**
+     * Interval ID returned by setInterval(). null if accessed before the project has started.
+     */
     _steppingInterval: number | null;
 
     redrawRequested: boolean;
