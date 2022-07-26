@@ -21,6 +21,7 @@ if (target) {
   const variable = target.lookupVariableByNameAndType('test', 'list');
   if (variable) {
     const name: string = variable.name;
+    const upToDate: boolean | undefined = variable.value._monitorUpToDate;
     variable.value.filter(i => i.toString());
   }
 

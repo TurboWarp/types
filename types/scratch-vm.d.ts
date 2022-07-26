@@ -9,10 +9,6 @@
 /// <reference path="./scratch-storage.d.ts" />
 
 declare namespace VM {
-  type ScratchCompatibleValue = string | boolean | number;
-
-  type VariableValue = ScratchCompatibleValue | ScratchCompatibleValue[];
-
   /**
    * Indicates the type is dependent on the existence of a renderer.
    */
@@ -32,6 +28,14 @@ declare namespace VM {
    * Indicates the type is dependent of whether the VM is attached to scratch-gui.
    */
   type IfGui<HasGui, NoGui> = HasGui;
+
+  type ScratchCompatibleValue = string | boolean | number;
+
+  interface ScratchList extends Array<ScratchCompatibleValue> {
+    _monitorUpToDate?: boolean;
+  }
+
+  type VariableValue = ScratchCompatibleValue | ScratchList;
 
   interface BaseAsset {
     /**
@@ -196,7 +200,7 @@ declare namespace VM {
 
   interface ListVariable extends BaseVariable {
     type: 'list';
-    value: ScratchCompatibleValue[];
+    value: ScratchList;
   }
 
   interface BroadcastVariable extends BaseVariable {
