@@ -4,6 +4,7 @@
 /// <reference path="./react.d.ts" />
 /// <reference path="./immutable.d.ts" />
 /// <reference path="./scratch-paint.ts" />
+/// <reference path="./scratch-vm.d.ts" />
 
 declare namespace ScratchGUI {
   interface ReduxState extends ScratchPaint.ReduxState {
