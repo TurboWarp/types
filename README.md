@@ -1,29 +1,28 @@
-# Types
+# Types for the Scratch VM and editor
 
-Type definitions and documentation for the Scratch runtime because Scratch doesn't provide them.
-
-The hope is to make it easier to develop reliable third-party tools.
+Scratch doesn't provide types for their libraries, so we wrote our own.
 
 This project is still at an early stage.
 
-## Scope
-
 Despite being in the TurboWarp organization, this project currently only wants to document the vanilla Scratch runtime. Additional types for the TurboWarp runtime will be added later.
 
-We want to type and document all public APIs in:
-
- - scratch-vm
- - scratch-render
- - scratch-svg-render
- - scratch-render-fonts
- - scratch-audio
- - scratch-storage
- - scratch-parser
- - scratch-blocks
+|Module|Status|
+|:-:|:-:|
+|scratch-vm|✅|
+|scratch-render|✅|
+|scratch-svg-render|❌|
+|scratch-render-fonts|❌|
+|scratch-audio|🚧|
+|scratch-storage|❌|
+|scratch-parser|❌|
+|scratch-blocks|🚧|
+|scratch-gui redux|❌|
+|scratch-paint redux|❌|
+|scratch-www redux|❌|
 
 ## Using from npm
 
-Not ready yet.
+### Not ready yet.
 
 You can tell TypeScript to use these types when you import scratch-vm, scratch-render, etc.
 
@@ -53,19 +52,24 @@ You can tell TypeScript to use these types when you import scratch-vm, scratch-r
 }
 ```
 
-Then in your TypeScript:
+Then in your JavaScript or TypeScript:
 
-```ts
+```js
 import VM from 'scratch-vm';
-import RenderWebGL from 'scratch-render';
-import AudioEngine from 'scratch-audio';
-import ScratchStorage from 'scratch-storage';
-
 const vm = new VM();
-vm.attachRenderer(new RenderWebGL());
-vm.attachAudioEngine(new AudioEngine());
-vm.attachStorage(new ScratchStorage());
-vm.loadProject(/* load a project somehow */ new ArrayBuffer(100))
+vm.loadProject(/* read a project somehow */ new ArrayBuffer(100))
+  .then(() => {
+    vm.start();
+    vm.greenFlag();
+  });
+```
+
+Or if you're still using require():
+
+```js
+const VM = require('scratch-vm');
+const vm = new VM();
+vm.loadProject(/* read a project somehow */ new ArrayBuffer(100))
   .then(() => {
     vm.start();
     vm.greenFlag();
