@@ -1,10 +1,10 @@
 # Types definitions for the Scratch VM and editor
 
-Scratch doesn't provide types for their libraries, so we wrote our own.
+Scratch doesn't provide type definitions for their libraries, so we wrote our own.
 
 This project is still at an early stage.
 
-Despite being in the TurboWarp organization, this project is currently focused only on the vanilla Scratch (LLK) runtime and editor. Additional types for TurboWarp may be added later.
+Despite being in the TurboWarp organization, this project is currently focused only on the vanilla (LLK) Scratch runtime and editor. Additional types for TurboWarp may be added later.
 
 |Module|Status|
 |:-:|:-:|
@@ -22,17 +22,23 @@ Despite being in the TurboWarp organization, this project is currently focused o
 
 ## Using from npm
 
-### Not ready yet.
+First, install the types:
 
-You can tell TypeScript to use these types when you import scratch-vm, scratch-render, etc.
+```
+npm install @turbowarp/types
+```
+
+Next, you must use `tsconfig.json` to configure TypeScript to know how to find the types.
 
 ```json5
 {
   "compilerOptions": {
+    // If you use require() or "module": "CommonJS", remove these lines.
+    // If you use "module": "ES6", synthetic default imports are required.
     "module": "ES6",
     "allowSyntheticDefaultImports": true,
 
-    // Tell TypeScript where to find the types for Scratch libraries
+    // Tell TypeScript where to find the types for Scratch libraries.
     "paths": {
       "scratch-vm": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-render": ["./node_modules/@turbowarp/types/index.d.ts"],
@@ -44,7 +50,7 @@ You can tell TypeScript to use these types when you import scratch-vm, scratch-r
       "scratch-blocks": ["./node_modules/@turbowarp/types/index.d.ts"]
     },
 
-    // Recommended strictness settings
+    // Recommended strictness settings. Change as you please.
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitThis": true
@@ -64,7 +70,7 @@ vm.loadProject(/* read a project somehow */ new ArrayBuffer(100))
   });
 ```
 
-Or if you're still using require():
+Or if you still use require():
 
 ```js
 const VM = require('scratch-vm');
@@ -78,10 +84,10 @@ vm.loadProject(/* read a project somehow */ new ArrayBuffer(100))
 
 ## Tests
 
-There are some tests in the tests folder. These files are never actually run, but the code will be type checked.
+There are some tests in the `tests` folder. These files are never actually run, but the code will be type checked.
 
 ## License
 
-Type definitions are licensed under the Apache 2.0 license.
+Type definitions and test code are licensed under the Apache 2.0 license.
 
-The projects being documented may be licensed under different licenses.
+The libraries being documented may be under different licenses.
