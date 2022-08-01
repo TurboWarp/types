@@ -32,7 +32,7 @@ declare module 'scratch-storage' {
 }
 
 declare module 'scratch-parser' {
-  export = ScratchParser;
+  export = ScratchParser.unpack;
 }
 
 declare module 'scratch-blocks' {
