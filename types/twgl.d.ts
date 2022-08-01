@@ -1,3 +1,6 @@
+// Type definitions for twgl (rhymes with wiggle)
+// Project: https://twgljs.org/
+
 declare namespace twgl {
   interface BufferInfo {
     // TODO: returned by createBufferInfoFromArrays

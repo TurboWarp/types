@@ -1,5 +1,5 @@
-// Type definitions for scratch-render
-// Project: https://github.com/LLK/scratch-render
+// Type definitions for scratch-audio
+// Project: https://github.com/LLK/scratch-audio
 
 declare namespace AudioEngine {
   interface SoundPlayer {

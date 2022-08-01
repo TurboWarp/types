@@ -1,3 +1,6 @@
+// Type definitions for scratch-blocks
+// Project: https://github.com/LLK/scratch-blocks
+
 declare namespace ScratchBlocks {
   class Block {
 

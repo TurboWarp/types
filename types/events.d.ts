@@ -1,3 +1,6 @@
+// Type definitions for the Node.js events module
+// Project: https://nodejs.org/api/events.html
+
 type EventEmitterArgs<Events, K extends keyof Events> = Events[K] extends Array<unknown> ? Events[K] : unknown[];
 type EventEmitterCallback<Events, K extends keyof Events> = (...args: Events[K] extends Array<unknown> ? Events[K] : unknown[]) => void
 
