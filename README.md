@@ -10,7 +10,7 @@ Despite being in the TurboWarp organization, this project is currently focused o
 |:-:|:-:|
 |scratch-vm|✅|
 |scratch-render|✅|
-|scratch-svg-renderer|❌|
+|scratch-svg-renderer|✅|
 |scratch-render-fonts|❌|
 |scratch-audio|🚧|
 |scratch-storage|❌|

@@ -7,6 +7,7 @@
 /// <reference path="./scratch-render.d.ts" />
 /// <reference path="./scratch-audio.d.ts" />
 /// <reference path="./scratch-storage.d.ts" />
+/// <reference path="./scratch-svg-renderer.d.ts" />
 
 declare namespace VM {
   /**
@@ -956,6 +957,10 @@ declare namespace VM {
 
     attachAudioEngine(audioEngine: AudioEngine): void;
 
+    v2BitmapAdapter?: ScratchSVGRenderer.BitmapAdapter;
+
+    attachV2BitmapAdapter(bitmapAdapter: ScratchSVGRenderer.BitmapAdapter): void;
+
     storage: IfGui<GUIScratchStorage, ScratchStorage>;
 
     attachStorage(storage: ScratchStorage): void;
@@ -1213,6 +1218,16 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    * @see {VM.Runtime.attachAudioEngine}
    */
   attachAudioEngine(audioEngine: AudioEngine): void;
+
+  /**
+   * @deprecated Does nothing.
+   */
+  attachV2SVGAdapter(): void;
+
+  /**
+   * @see {VM.Runtime.attachV2BitmapAdapter}
+   */
+  attachV2BitmapAdapter(bitmapAdapter: ScratchSVGRenderer.BitmapAdapter): void;
 
   /**
    * @see {VM.Runtime.attachStorage}
