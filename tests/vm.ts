@@ -40,6 +40,12 @@ if (target) {
     const mutation = block.mutation as VM.ProcedureCallMutation;
     JSON.parse(mutation.argumentids);
   }
+
+  const bubbleState = target.getCustomState('Scratch.looks');
+  if (bubbleState) {
+    bubbleState.text.charAt(0);
+    target.setCustomState('Scratch.looks', bubbleState);
+  }
 } else {
   const doesNotExist: undefined = target;
 }

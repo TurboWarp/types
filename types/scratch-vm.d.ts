@@ -237,6 +237,55 @@ declare namespace VM {
     size?: number;
   }
 
+  const enum TextToSpeechVoice {
+    Alto = 'ALTO',
+    Tenor = 'TENOR',
+    Squeak = 'SQUEAK',
+    Giant = 'GIANT',
+    Kitten = 'KITTEN'
+  }
+
+  interface CustomState {
+    'Scratch.looks': {
+      drawableId: null | number;
+      skinId: null | number;
+      onSpriteRight: boolean;
+      text: string;
+      type: RenderWebGL.TextBubbleType;
+    };
+
+    'Scratch.sound': {
+      effects: {
+        pitch: number;
+        pan: number;
+      }
+    };
+
+    'Scratch.music': {
+      currentInstrument: number;
+    };
+
+    'Scratch.pen': {
+      penDown: boolean;
+      color: number;
+      saturation: number;
+      brightness: number;
+      transparency: number;
+      _shade: number;
+      penAttributes: RenderWebGL.PenAttributes;
+    };
+
+    'Scratch.text2speech': {
+      voiceId: TextToSpeechVoice;
+    };
+
+    'Scratch.videoSensing': {
+      motionFrameNumber: number;
+      motionAmount: number;
+      motionDirection: number;
+    };
+  }
+
   interface BaseTarget extends EventEmitter<{}> {
     runtime: Runtime;
 
@@ -248,7 +297,9 @@ declare namespace VM {
 
     comments: Record<string, Comment>;
 
-    _customState: Record<string, unknown>;
+    _customState: Partial<CustomState>;
+    getCustomState<T extends keyof CustomState>(name: T): CustomState[T] | undefined;
+    setCustomState<T extends keyof CustomState>(name: T, value: CustomState[T]): void;
 
     /**
      * Called by runtime when the green flag is pressed.
