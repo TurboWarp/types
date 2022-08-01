@@ -1,4 +1,4 @@
-# Types definitions for the Scratch VM and editor
+# Type definitions for the Scratch VM and editor
 
 Scratch doesn't provide type definitions for their libraries, so we wrote our own.
 
