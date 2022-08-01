@@ -10,7 +10,7 @@ Despite being in the TurboWarp organization, this project is currently focused o
 |:-:|:-:|
 |scratch-vm|✅|
 |scratch-render|✅|
-|scratch-svg-render|❌|
+|scratch-svg-renderer|❌|
 |scratch-render-fonts|❌|
 |scratch-audio|🚧|
 |scratch-storage|❌|
@@ -36,7 +36,7 @@ You can tell TypeScript to use these types when you import scratch-vm, scratch-r
     "paths": {
       "scratch-vm": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-render": ["./node_modules/@turbowarp/types/index.d.ts"],
-      "scratch-svg-render": ["./node_modules/@turbowarp/types/index.d.ts"],
+      "scratch-svg-renderer": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-render-fonts": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-storage": ["./node_modules/@turbowarp/types/index.d.ts"],
       "scratch-audio": ["./node_modules/@turbowarp/types/index.d.ts"],

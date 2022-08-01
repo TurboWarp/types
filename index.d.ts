@@ -1,6 +1,6 @@
 /// <reference path="./types/scratch-vm.d.ts" />
-/// <reference path="./types/scratch-svg-render.d.ts" />
 /// <reference path="./types/scratch-render.d.ts" />
+/// <reference path="./types/scratch-svg-renderer.d.ts" />
 /// <reference path="./types/scratch-render-fonts.d.ts" />
 /// <reference path="./types/scratch-audio.d.ts" />
 /// <reference path="./types/scratch-storage.d.ts" />
@@ -15,8 +15,8 @@ declare module 'scratch-render' {
   export = RenderWebGL;
 }
 
-declare module 'scratch-svg-render' {
-  export = ScratchSVGRender;
+declare module 'scratch-svg-renderer' {
+  export = ScratchSVGRenderer;
 }
 
 declare module 'scratch-render-fonts' {
