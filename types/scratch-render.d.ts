@@ -60,16 +60,133 @@ declare namespace RenderWebGL {
     snapToInt(): void;
   }
 
-  class Skin {
+  /**
+   * Suggested properties of a drawing region. Strictly, this can really be whatever you want it to be.
+   */
+  interface DrawingRegion {
+    enter?(): void;
+    exit?(): void;
+  }
 
+  interface Shader {
+    // TODO
+  }
+
+  interface ShaderManager {
+    // TODO
+  }
+
+  class Silhouette {
+    static _updateCanvas(): HTMLCanvasElement;
+
+    _width: number;
+    _height: number;
+    _colorData: Uint8ClampedArray | null;
+
+    _getColor(silhouette: Silhouette, x: number, y: number, destination?: Uint8ClampedArray): Uint8ClampedArray;
+
+    /**
+     * @param image Image data
+     * @param isPremultiplied Whether alpha is premultiplied. Defaults to false.
+     */
+    update(image: BitmapData, isPremultiplied?: boolean): void;
+
+    colorAtNearest(textureCoordinate: twgl.V3, destination?: Uint8ClampedArray): Uint8ClampedArray;
+    colorAtLinear(textureCoordinate: twgl.V3, destination?: Uint8ClampedArray): Uint8ClampedArray;
+
+    isTouchingNearest(textureCoordinate: twgl.V3): void;
+    isTouchingLinear(textureCoordinate: twgl.V3): void;
+  }
+
+  interface SkinEventMap {
+    WasAltered: void;
+  }
+
+  class Skin extends EventEmitter<SkinEventMap> {
+    _id: number;
+    get id(): number;
+
+    get size(): [number, number];
+
+    _rotationCenter: twgl.V3;
+    get rotationCenter(): twgl.V3;
+
+    /**
+     * Always returns the middle of the skin (size / 2).
+     * No relation to Skin._rotationCenter or Skin.rotationCenter.
+     */
+    calculateRotationCenter(): [number, number];
+
+    _texture: WebGLTexture | null;
+
+    _uniforms: {
+      u_skinSize: [number, number];
+      u_skin: WebGLTexture | null;
+    };
+    getUniforms(): Skin['_uniforms'];
+
+    _silhouette: Silhouette;
+    updateSilhouette(): void;
+
+    /**
+     * @see {Silhouette.isTouchingNearest}
+     */
+    isTouchingNearest(textureCoordinate: twgl.V3): boolean;
+
+    /**
+     * @see {Silhouette.isTouchingLinear}
+     */
+    isTouchingLinear(textureCoordinate: twgl.V3): boolean;
+
+    useNearest(scale: [number, number], drawable: Drawable): boolean;
+
+    getTexture(scale: [number, number]): WebGLTexture;
+    _setTexture(image: BitmapData): void;
+    setEmptyImageData(): void;
+
+    getFenceBounds(): Rectangle;
+
+    dispose(): void;
   }
 
   class BitmapSkin extends Skin {
+    static _getBitmapSize(image: BitmapData): [number, number];
 
+    _renderer: RenderWebGL;
+
+    _costumeResolution: BitmapResolution;
+    _textureSize: [number, number];
+
+    /**
+     * Synchronously update the content of the skin.
+     * @param image The new image.
+     * @param bitmapResolution Defaults to 2.
+     * @param rotationCenter Defaults to the center of the image.
+     */
+    setBitmap(image: BitmapData, bitmapResolution?: BitmapResolution, rotationCenter?: [number, number]): void;
   }
 
   class SVGSkin extends Skin {
+    _renderer: RenderWebGL;
 
+    _svgImage: HTMLImageElement;
+    _svgImageLoaded: boolean;
+    _size: [number, number];
+    _canvas: HTMLCanvasElement;
+    _context: CanvasRenderingContext2D;
+    _scaledMIPs: WebGLTexture[];
+    _largestMIPScale: number;
+    _maxTextureScale: number;
+
+    createMIP(scale: number): WebGLTexture;
+    resetMIPs(): void;
+
+    /**
+     * Asynchronously update the content of the skin. May take a couple frames for changes to appear.
+     * @param svgData SVG source code
+     * @param rotationCenter Defaults to the center of the image.
+     */
+    setSVG(svgData: string, rotationCenter?: [number, number]): void;
   }
 
   interface PenAttributes {
@@ -81,7 +198,32 @@ declare namespace RenderWebGL {
   }
 
   class PenSkin extends Skin {
+    _renderer: RenderWebGL;
 
+    _size: [number, number];
+    _framebuffer: WebGLFramebuffer;
+    _silhouetteDirty: boolean;
+    _silhouettePixels: Uint8Array;
+    _silhouetteImageData: ImageData;
+
+    _lineOnBufferDrawRegionId: DrawingRegion;
+    _enterDrawLineOnBuffer(): void;
+    _exitDrawLineOnBuffer(): void;
+    _drawLineOnBuffer(attributes: PenAttributes, x1: number, y1: number, x2: number, y2: number): void;
+
+    _usePenBufferDrawRegionId: DrawingRegion;
+    _enterUsePenBuffer(): void;
+    _exitUsePenBuffer(): void;
+
+    _lineBufferInfo: twgl.BufferInfo;
+    _lineShader: Shader;
+
+    clear(): void;
+    drawPoint(attributes: PenAttributes, x: number, y: number): void;
+    drawLine(attributes: PenAttributes, x1: number, y1: number, x2: number, y2: number): void;
+
+    onNativeSizeChanged(event: ScratchRenderEventMap['NativeSizeChanged']): void;
+    _setCanvasSize(size: [number, number]): void;
   }
 
   const enum TextBubbleType {
@@ -89,20 +231,62 @@ declare namespace RenderWebGL {
     Think = 'think',
   }
 
-  class TextBubbleSkin extends Skin {
+  class CanvasMeasurementProvider {
+    _ctx: CanvasRenderingContext2D;
+    _cache: Record<string, number>;
+    measureText(text: string): number;
 
+    /**
+     * Does nothing.
+     */
+    beginMeasurementSession(): void;
+
+    /**
+     * Does nothing.
+     */
+    endMeasurementSession(): void;
+  }
+
+  class TextWrapper {
+    _measurementProvider: CanvasMeasurementProvider;
+    _cache: Record<string, string[]>;
+    wrapText(maxWidth: number, text: string): string[];
+  }
+
+  class TextBubbleSkin extends Skin {
+    _renderer: RenderWebGL;
+
+    _canvas: HTMLCanvasElement;
+    _size: [number, number];
+    _renderedScale: number;
+    _lines: string[];
+    _textAreaSize: {
+      width: number;
+      height: number
+    };
+    _bubbleType: TextBubbleType;
+    _pointsLeft: boolean;
+    _textDirty: boolean;
+    _textureDirty: boolean;
+
+    measurementProvider: CanvasMeasurementProvider;
+    textWrapper: TextWrapper;
+
+    /**
+     * @param type Type of bubble.
+     * @param text Text to display.
+     * @param pointsLeft True if this bubble points left, false if this bubble points right.
+     */
+    setTextBubble(type: TextBubbleType, text: string, pointsLeft: boolean): void;
+
+    _restyleCanvas(): void;
+    _reflowLines(): void;
+
+    _renderTextBubble(scale: number): void;
   }
 
   interface Drawable {
-
-  }
-
-  interface ShaderManager {
-
-  }
-
-  interface DrawingRegion {
-
+    // TODO
   }
 
   interface ScratchRenderEventMap {
@@ -181,13 +365,34 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   _allSkins: RenderWebGL.Skin[];
   _nextSkinId: number;
 
-  createBitmapSkin(image: RenderWebGL.BitmapData, BitmapResolution: RenderWebGL.BitmapResolution, rotationCenter: [number, number]): RenderWebGL.BitmapSkin;
-  updateBitmapSkin(skinId: number, image: RenderWebGL.BitmapData, BitmapResolution: RenderWebGL.BitmapResolution, rotationCenter: [number, number]): void;
+  /**
+   * @see {RenderWebGL.BitmapSkin.setBitmap}
+   */
+  createBitmapSkin(image: RenderWebGL.BitmapData, bitmapResolution?: RenderWebGL.BitmapResolution, rotationCenter?: [number, number]): RenderWebGL.BitmapSkin;
 
+  /**
+   * @see {RenderWebGL.BitmapSkin.setBitmap}
+   */
+  updateBitmapSkin(skinId: number, image: RenderWebGL.BitmapData, bitmapResolution?: RenderWebGL.BitmapResolution, rotationCenter?: [number, number]): void;
+
+  /**
+   * @see {RenderWebGL.SVGSkin.setSVG}
+   */
   createSVGSkin(svgData: string, rotationCenter: [number, number]): RenderWebGL.SVGSkin;
+
+  /**
+   * @see {RenderWebGL.SVGSkin.setSVG}
+   */
   updateSVGSkin(skinId: number, svgData: string, rotationCenter: [number, number]): void;
 
+  /**
+   * @see {RenderWebGL.TextBubbleSkin.setTextBubble}
+   */
   createTextSkin(type: RenderWebGL.TextBubbleType, text: string, pointsLeft: boolean): RenderWebGL.TextBubbleSkin;
+
+  /**
+   * @see {RenderWebGL.TextBubbleSkin.setTextBubble}
+   */
   updateTextSkin(skinId: number, type: RenderWebGL.TextBubbleType, text: string, pointsLeft: boolean): void;
 
   createPenSkin(): RenderWebGL.PenSkin;
