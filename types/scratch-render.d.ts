@@ -75,8 +75,20 @@ declare namespace RenderWebGL {
     // TODO
   }
 
-  interface ShaderManager {
-    // TODO
+  class ShaderManager {
+    static EFFECT_INFO: Record<Effect, {
+      uniformName: string;
+      mask: number;
+      converter(rawEffect: number): number;
+      shapeChanges: boolean;
+    }>;
+    static EFFECTS: Effect[];
+    static DRAW_MODE: Record<DrawMode, DrawMode>;
+
+    _gl: AnyWebGLContext;
+    _shaderCache: Record<DrawMode, Record<EffectMask, twgl.ProgramInfo[]>>;
+    _buildShader(drawMode: DrawMode, effectMask: EffectMask): twgl.ProgramInfo;
+    getShader(drawMode: DrawMode, effectMask: EffectMask): twgl.ProgramInfo;
   }
 
   class Silhouette {

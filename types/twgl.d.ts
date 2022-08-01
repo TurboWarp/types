@@ -4,6 +4,10 @@ declare namespace twgl {
     // might not be able to meaningfully type?
   }
 
+  interface ProgramInfo {
+    // TODO: returned by createProgramInfo
+  }
+
   interface M4 {
     // TODO
   }
