@@ -258,7 +258,7 @@ declare namespace VM {
       effects: {
         pitch: number;
         pan: number;
-      }
+      };
     };
 
     'Scratch.music': {
@@ -297,10 +297,6 @@ declare namespace VM {
 
     comments: Record<string, Comment>;
 
-    _customState: Partial<CustomState>;
-    getCustomState<T extends keyof CustomState>(name: T): CustomState[T] | undefined;
-    setCustomState<T extends keyof CustomState>(name: T, value: CustomState[T]): void;
-
     /**
      * Called by runtime when the green flag is pressed.
      */
@@ -333,6 +329,15 @@ declare namespace VM {
      * isCloud is ignored if the sprite is not the stage or if the cloud variable limit has been reached.
      */
     createVariable(id: string, name: string, type: VariableType, isCloud?: boolean): void;
+
+    _customState: Partial<CustomState>;
+    getCustomState<T extends keyof CustomState>(name: T): CustomState[T] | undefined;
+    setCustomState<T extends keyof CustomState>(name: T, value: CustomState[T]): void;
+
+    /**
+     * Mirrors custom state.
+     */
+    soundEffects?: CustomState['Scratch.sound']['effects'];
 
     postSpriteInfo(spriteInfo: PostedSpriteInfo): void;
 
