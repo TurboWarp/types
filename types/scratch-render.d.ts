@@ -35,6 +35,9 @@ declare namespace RenderWebGL {
     Ghost = 'ghost'
   }
 
+  // TODO: document bit masks
+  type EffectMask = number;
+
   const enum DrawMode {
     Default = 'default',
     StraightAlpha = 'straightAlpha',
@@ -285,8 +288,99 @@ declare namespace RenderWebGL {
     _renderTextBubble(scale: number): void;
   }
 
-  interface Drawable {
-    // TODO
+  class Drawable {
+    static color4fFromID(id: number): [number, number, number, number];
+    static color3bToID(r: number, g: number, b: number): number;
+    static sampleColor4b(coordinate: twgl.V3, drawable :Drawable, destination: Uint8ClampedArray, effectMask?: EffectMask): Uint8ClampedArray;
+
+    _id: number;
+    get id(): number;
+
+    _uniforms: {
+      u_modelMatrix: twgl.M4;
+
+      /**
+       * Only used in some debugging modes.
+       */
+      u_silhouetteColor: [number, number, number, number];
+    } & Record<Effect, number>;
+    getUniforms(): Drawable['_uniforms'];
+
+    _skin: Skin;
+    get skin(): Skin;
+    set skin(skin: Skin);
+    _skinWasAltered(): void;
+
+    _position: twgl.V3;
+    /**
+     * @param position The new position. This will be rounded.
+     */
+    updatePosition(position: [number, number]): void;
+
+    _scale: twgl.V3;
+    get scale(): twgl.V3;
+    updateScale(scale: number): void;
+
+    _direction: number;
+    updateDirection(direction: number): void;
+
+    _visible: boolean;
+    getVisible(): boolean;
+    updateVisible(visible: boolean): void;
+
+    enabledEffects: EffectMask;
+    updateEffect(effect: Effect, value: number): void;
+
+    /**
+     * @deprecated Use the specific update* methods instead.
+     */
+    updateProperties(properties: {
+      position?: [number, number];
+      direction?: number;
+      scale?: number;
+      visible?: boolean;
+    } | Record<Effect, number>): void;
+
+    _transformDirty: boolean;
+    _calculateTransform(): void;
+
+    _rotationMatrix: twgl.M4;
+    _rotationTransformDirty: boolean;
+
+    _rotationAdjusted: twgl.V3;
+    _rotationCenterDirty: boolean;
+
+    _skinScale: twgl.V3;
+    _skinScaleDirty: boolean;
+
+    _convexHullPoints: Array<[number, number]>;
+    _convexHullDirty: boolean;
+    needsConvexHullPoints(): boolean;
+    setConvexHullDirty(): boolean;
+    setConvexHullPoints(points: Array<[number, number]>): void;
+
+    _transformedHullPoints: Array<[number, number]>;
+    _transformedHullDirty: boolean;
+    _getTransformedHullPoints(): Array<[number, number]>;
+
+    setTransformDirty(): void;
+
+    _inverseMatrix: twgl.M4;
+    _inverseTransformDirty: boolean;
+    updateMatrix(): void;
+
+    getBounds(result?: Rectangle): Rectangle;
+    getBoundsForBubble(result?: Rectangle): Rectangle;
+    getAABB(result?: Rectangle): Rectangle;
+    getFastBounds(result?: Rectangle): Rectangle;
+
+    updateCPURenderAttributes(): void;
+    isTouching(textureCoordinate: twgl.V3): boolean;
+    _isTouchingNearest(textureCoordinate: twgl.V3): boolean;
+    _isTouchingLinear(textureCoordinate: twgl.V3): boolean;
+    _isTouchingNever(textureCoordinate: twgl.V3): false;
+
+    dispose(): void;
   }
 
   interface ScratchRenderEventMap {
@@ -335,7 +429,7 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   _drawThese(drawableIds: number[], drawMode: RenderWebGL.DrawMode, projection: twgl.M4, opts?: {
     filter?: (drawableId: number) => boolean;
     extraUniforms?: object;
-    effectMask?: number;
+    effectMask?: RenderWebGL.EffectMask;
     ignoreVisibility?: boolean;
     framebufferWidth?: number;
     framebufferHeight?: number;
