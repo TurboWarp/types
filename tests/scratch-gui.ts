@@ -9,3 +9,8 @@ dispatch({
   type: 'scratch-gui/navigation/ACTIVATE_TAB',
   activeTabIndex: 0
 });
+
+state.scratchPaint.cursor.charAt(0);
+dispatch({
+  type: 'scratch-paint/undo/CLEAR'
+});

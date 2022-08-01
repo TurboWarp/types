@@ -77,6 +77,10 @@ declare namespace ScratchPaint {
   }
 
   interface ReduxState {
+    scratchPaint: ScratchPaintState;
+  }
+
+  interface ScratchPaintState {
     mode: Mode;
 
     bitBrushSize: number;
@@ -166,7 +170,7 @@ declare namespace ScratchPaint {
     } |
     {
       type: 'scratch-paint/eye-dropper/ACTIVATE_COLOR_PICKER';
-      callback: ReduxState['color']['eyeDropper']['callback'];
+      callback: ScratchPaintState['color']['eyeDropper']['callback'];
       previousMode: Mode;
     } |
     {
@@ -208,7 +212,7 @@ declare namespace ScratchPaint {
     } |
     {
       type: 'scratch-paint/clipboard/SET';
-      clipboardItems: ReduxState['clipboard']['items']
+      clipboardItems: ScratchPaintState['clipboard']['items']
     } |
     {
       type: 'scratch-paint/clipboard/INCREMENT_PASTE_OFFSET';
@@ -258,7 +262,7 @@ declare namespace ScratchPaint {
     } |
     {
       type: 'scratch-paint/select/CHANGE_SELECTED_ITEMS';
-      selectedItems: ReduxState['selectedItems'];
+      selectedItems: ScratchPaintState['selectedItems'];
       bitmapMode: boolean;
     } |
     {

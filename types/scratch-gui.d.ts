@@ -3,15 +3,15 @@
 
 /// <reference path="./react.d.ts" />
 /// <reference path="./immutable.d.ts" />
+/// <reference path="./scratch-paint.ts" />
 
 declare namespace ScratchGUI {
-  interface ReduxState {
+  interface ReduxState extends ScratchPaint.ReduxState {
     scratchGui: ScratchGUIState;
     locales: LocaleState;
-    session?: SessionState;
+    session: SessionState;
   }
-
-  type ReduxEvent = ScratchGUIEvent | LocaleEvent;
+  type ReduxEvent = ScratchGUIEvent | LocaleEvent | ScratchPaint.ReduxEvent;
 
   const enum AlertType {
     Standard = 'STANDARD',
