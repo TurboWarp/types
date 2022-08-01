@@ -1,10 +1,10 @@
-# Types for the Scratch VM and editor
+# Types definitions for the Scratch VM and editor
 
 Scratch doesn't provide types for their libraries, so we wrote our own.
 
 This project is still at an early stage.
 
-Despite being in the TurboWarp organization, this project currently only wants to document the vanilla Scratch runtime. Additional types for the TurboWarp runtime will be added later.
+Despite being in the TurboWarp organization, this project is currently focused only on the vanilla Scratch (LLK) runtime and editor. Additional types for TurboWarp may be added later.
 
 |Module|Status|
 |:-:|:-:|
