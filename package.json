@@ -2,7 +2,7 @@
   "name": "@turbowarp/types",
   "version": "0.0.1",
   "description": "Type definitions for the Scratch VM and editor",
-  "main": "index.js",
+  "main": "",
   "types": "index.d.ts",
   "directories": {
     "test": "tests"
