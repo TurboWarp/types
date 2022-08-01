@@ -13,7 +13,7 @@ Despite being in the TurboWarp organization, this project is currently focused o
 |scratch-svg-renderer|✅|
 |scratch-render-fonts|✅|
 |scratch-audio|🚧|
-|scratch-storage|❌|
+|scratch-storage|✅|
 |scratch-parser|❌|
 |scratch-blocks|🚧|
 |scratch-gui redux|✅|
