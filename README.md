@@ -17,7 +17,7 @@ Despite being in the TurboWarp organization, this project is currently focused o
 |scratch-parser|❌|
 |scratch-blocks|🚧|
 |scratch-gui redux|✅|
-|scratch-paint redux|❌|
+|scratch-paint redux|✅|
 |scratch-www redux|❌|
 
 ## Using from npm
