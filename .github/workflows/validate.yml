@@ -21,4 +21,4 @@ jobs:
       - name: Validate TypeScript
         run: npm test
       - name: Validate index.d.ts
-        run: npx tsc index.d.ts
+        run: npx tsc index.d.ts --target es6
