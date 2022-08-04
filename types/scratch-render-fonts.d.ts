@@ -11,6 +11,6 @@ declare namespace ScratchRenderFonts {
     Pixel = 'Pixel',
     Scratch = 'Scratch'
   }
-
-  function getFonts(): Record<Font, string>;
 }
+
+declare function ScratchRenderFonts(): Record<ScratchRenderFonts.Font, string>;

@@ -20,7 +20,7 @@ declare module 'scratch-svg-renderer' {
 }
 
 declare module 'scratch-render-fonts' {
-  export = ScratchRenderFonts.getFonts;
+  export = ScratchRenderFonts;
 }
 
 declare module 'scratch-audio' {
