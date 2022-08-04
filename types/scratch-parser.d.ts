@@ -4,10 +4,12 @@
 /// <reference path="./jszip.d.ts" />
 
 declare namespace ScratchParser {
-  /**
-   * @param input The binary data representing the project or sprite.
-   * @param isSprite True if this is a sprite, false if this is a project.
-   * @param callback
-   */
-  function unpack(input: ArrayBuffer | string, isSprite: boolean, callback: (error: unknown, unpacked: [unknown, JSZip | null]) => void): void
+
 }
+
+/**
+ * @param input The binary data representing the project or sprite.
+ * @param isSprite True if this is a sprite, false if this is a project.
+ * @param callback
+ */
+declare function ScratchParser(input: ArrayBuffer | string, isSprite: boolean, callback: (error: unknown, unpacked: [unknown, JSZip | null]) => void): void
