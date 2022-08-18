@@ -452,73 +452,73 @@ declare namespace ScratchGUI {
     {
       type: 'scratch-gui/project-state/DONE_CREATING_COPY';
       projectId: string;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_CREATING_NEW';
       projectId: string;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_FETCHING_DEFAULT';
       projectData: ProjectData;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_FETCHING_WITH_ID';
       projectData: ProjectData;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_LOADING_VM_TO_SAVE';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_LOADING_VM_WITH_ID';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_LOADING_VM_WITHOUT_ID';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_REMIXING';
       projectId: string;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_UPDATING';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_UPDATING_BEFORE_COPY';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/DONE_UPDATING_BEFORE_NEW';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/RETURN_TO_SHOWING';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/SET_PROJECT_ID';
       projectId: string;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_AUTO_UPDATING';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_CREATING_NEW';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_ERROR';
       error: unknown;
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_FETCHING_NEW';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_LOADING_VM_FILE_UPLOAD';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_MANUAL_UPDATING';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_REMIXING';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_UPDATING_BEFORE_CREATING_COPY';
-    } | 
+    } |
     {
       type: 'scratch-gui/project-state/START_UPDATING_BEFORE_CREATING_NEW';
     } |
