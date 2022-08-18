@@ -171,7 +171,7 @@ declare namespace ScratchPaint {
     {
       type: 'scratch-paint/eye-dropper/ACTIVATE_COLOR_PICKER';
       callback: ScratchPaintState['color']['eyeDropper']['callback'];
-      previousMode: Mode;
+      previousMode: Paper.Tool;
     } |
     {
       type: 'scratch-paint/eye-dropper/DEACTIVATE_COLOR_PICKER';

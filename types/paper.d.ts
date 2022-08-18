@@ -9,4 +9,9 @@ declare namespace Paper {
   interface Matrix {
     // TODO
   }
+
+  interface Tool {
+    // TODO
+    activate(): void;
+  }
 }
