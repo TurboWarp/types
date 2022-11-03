@@ -76,6 +76,8 @@ declare namespace VM {
     name: string;
     costumes: Costume[];
     sounds: Sound[];
+    clones: RenderedTarget[];
+    soundBank: AudioEngine.SoundBank | null;
   }
 
   interface Field {
