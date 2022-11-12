@@ -299,6 +299,8 @@ declare namespace VM {
 
     comments: Record<string, Comment>;
 
+    createComment(id: string, blockId: string, text: string, x: number, y: number, width: number, height: number, minimized?: boolean): void;
+
     /**
      * Called by runtime when the green flag is pressed.
      */
