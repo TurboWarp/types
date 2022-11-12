@@ -995,6 +995,11 @@ declare namespace VM {
     start(): void;
 
     /**
+     * Stop all timers.
+     */
+    quit(): void;
+
+    /**
      * Start "when green flag pressed" scripts.
      */
     greenFlag(): void;
@@ -1300,6 +1305,11 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    * @see {VM.Runtime.start}
    */
   start(): void;
+
+  /**
+   * @see {VM.Runtime.quit}
+   */
+  quit(): void;
 
   /**
    * @see {VM.Runtime.greenFlag}
