@@ -1014,6 +1014,13 @@ declare namespace VM {
      */
     _step(): void;
 
+    turboMode: boolean;
+
+    /**
+     * If true, the runtime is running at 60 FPS. If false, the runtime is running at 30 FPS.
+     */
+    compatibilityMode: boolean;
+
     renderer: IfRenderer<RenderWebGL, undefined>;
 
     attachRenderer(renderer: RenderWebGL): void;

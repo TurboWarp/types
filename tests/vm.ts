@@ -53,3 +53,8 @@ if (target) {
 const audioEngine = new AudioEngine();
 vm.attachAudioEngine(audioEngine);
 audioEngine.audioContext.suspend();
+
+vm.setTurboMode(true);
+vm.runtime.turboMode as boolean
+vm.setCompatibilityMode(true);
+vm.runtime.compatibilityMode as boolean
