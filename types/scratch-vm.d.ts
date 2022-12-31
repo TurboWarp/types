@@ -60,6 +60,7 @@ declare namespace VM {
     rotationCenterX: number;
     rotationCenterY: number;
     size: [number, number];
+    skinId: number;
   }
 
   interface Sound extends BaseAsset {

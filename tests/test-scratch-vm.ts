@@ -58,3 +58,6 @@ vm.setTurboMode(true);
 vm.runtime.turboMode as boolean
 vm.setCompatibilityMode(true);
 vm.runtime.compatibilityMode as boolean
+
+const costume = vm.runtime.getTargetForStage()?.getCostumes()?.[0];
+costume?.skinId as number;
