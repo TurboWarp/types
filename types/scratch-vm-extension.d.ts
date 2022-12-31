@@ -1,3 +1,6 @@
+/// <reference path="./scratch-vm.d.ts" />
+/// <reference path="./scratch-render.d.ts" />
+
 declare namespace Scratch {
   namespace ArgumentType {
     /** @deprecated not tested -- do not rely on yet */
