@@ -90,10 +90,27 @@ declare namespace AudioEngine {
 
   interface SoundBank {
     audioEngine: AudioEngine;
+
+    /**
+     * Maps sound ID to its sound player.
+     */
     soundPlayers: Record<string, SoundPlayer>;
-    playerTargets: Record<string, Target>;
-    soundEffects: Record<string, EffectChain>;
+
+    /**
+     * Maps sound IDs to the target they were most recently been started by.
+     */
+    playerTargets: Map<string, Target>;
+
+    /**
+     * Maps sound IDs to their effect chain.
+     */
+    soundEffects: Map<string, EffectChain>;
+
+    /**
+     * Original effect chain cloned for each sound.
+     */
     effectChainPrime: EffectChain;
+
     addSoundPlayer(soundPlayer: SoundPlayer): void;
     getSoundPlayer(soundId: string): SoundPlayer | undefined;
     getSoundEffects(soundId: string): EffectChain;
