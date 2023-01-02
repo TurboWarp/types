@@ -111,6 +111,7 @@ declare namespace AudioEngine {
     stopImmediately(): void;
     finished(): Promise<void>;
     setPlaybackRate(playbackRate: number): void;
+    take(): SoundPlayer;
   }
 
   interface SoundBank {
