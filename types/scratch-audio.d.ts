@@ -19,10 +19,10 @@ declare namespace AudioEngine {
     getLoudness(): number;
   }
 
-  interface Effect {
+  interface AbstractEffect {
     audioEngine: AudioEngine;
     audioPlayer: SoundPlayer;
-    lastEffect: Effect;
+    lastEffect: AbstractEffect;
     value: number;
     initialized: boolean;
     initialize(): void;
@@ -41,11 +41,36 @@ declare namespace AudioEngine {
     dispose(): void;
   }
 
+  interface PitchEffect extends AbstractEffect {
+    get name(): 'pitch';
+    ratio: number;
+    getRatio(val: number): number;
+    updatePlayer(soundPlayer: SoundPlayer): void;
+    updatePlayers(soundPlayers: Record<string, SoundPlayer> | SoundPlayer[]): void;
+  }
+
+  interface PanEffect extends AbstractEffect {
+    get name(): 'pan';
+    leftGain: GainNode;
+    rightGain: GainNode;
+    channelMerger: ChannelMergerNode;
+  }
+
+  interface VolumeEffect extends AbstractEffect {
+    get name(): 'volume';
+  }
+
+  type Effect = PitchEffect | PanEffect | VolumeEffect;
+
+  interface EffectConstructor {
+    new(): Effect;
+  }
+
   interface EffectChain {
     audioEngine: AudioEngine;
     inputNode: GainNode;
     getInputNode(): GainNode;
-    effects: Effect[];
+    effects: EffectConstructor[];
     _effects: Effect[];
     firstEffect: Effect;
     lastEffect: Effect;

@@ -15,3 +15,7 @@ audioEngine.decodeSoundPlayer({
     });
     return player.finished();
   });
+
+declare const pitchEffect: AudioEngine.PitchEffect;
+pitchEffect.ratio as number
+pitchEffect.updatePlayers([]);
