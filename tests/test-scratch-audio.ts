@@ -19,3 +19,7 @@ audioEngine.decodeSoundPlayer({
 declare const pitchEffect: AudioEngine.PitchEffect;
 pitchEffect.ratio as number
 pitchEffect.updatePlayers([]);
+
+declare const soundPlayer: AudioEngine.SoundPlayer;
+
+new audioEngine.effects[0](audioEngine, soundPlayer, pitchEffect);

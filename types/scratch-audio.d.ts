@@ -63,7 +63,7 @@ declare namespace AudioEngine {
   type Effect = PitchEffect | PanEffect | VolumeEffect;
 
   interface EffectConstructor {
-    new(): Effect;
+    new(audioEngine: AudioEngine, soundPlayer: SoundPlayer, lastEffect: Effect | null): Effect;
   }
 
   interface EffectChain {
@@ -171,7 +171,8 @@ declare class AudioEngine {
    */
   getLoudness(): number;
 
-  effects: AudioEngine.Effect[];
+  effects: AudioEngine.EffectConstructor[];
+
   get EFFECT_NAMES(): Record<string, string>;
   get DECAY_DURATION(): number;
   get DECAY_WAIT(): number;
