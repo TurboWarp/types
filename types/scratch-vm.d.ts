@@ -818,6 +818,8 @@ declare namespace VM {
     _isDown: boolean;
     getIsDown(): boolean;
     postData(data: MouseData): void;
+    _activateClickHats(target: Target): void;
+    _pickTarget(x: number, y: number): Target;
   }
 
   interface MouseWheelData {
