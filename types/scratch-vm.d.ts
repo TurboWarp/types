@@ -614,7 +614,72 @@ declare namespace VM {
   }
 
   interface StackFrame {
-    // TODO
+    isLoop: boolean;
+    warpMode: boolean;
+    justReported: unknown;
+    reporting: string;
+    reported: unknown;
+    /** @deprecated unused */
+    waitingReporter: unknown;
+    params: unknown;
+    executionContext: unknown;
+    reset(): void;
+  }
+
+  interface BlockUtility {
+    sequencer: Sequencer;
+    thread: Thread;
+    _nowObj: {
+      now(): number;
+    };
+    nowObj: BlockUtility['_nowObj'],
+    target: Target;
+    runtime: Runtime;
+    stackFrame: StackFrame;
+    stackTimerFinished(): boolean;
+    stackTimerNeedsInit(): boolean;
+    startStackTimer(milliseconds: number): void;
+    yield(): void;
+    yieldTick(): void;
+    startBranch(branchNumber: number, isLoop: boolean): void;
+    /**
+     * @see {Runtime.stopAll}
+     */
+    stopAll(): void;
+    /**
+     * @see {Runtime.stopForTarget}
+     */
+    stopOtherTargetThreads(): void;
+    /**
+     * @see {Thread.stopThisScript}
+     */
+    stopThisScript(): void;
+    /**
+     * @see {Blocks.getProcedureParamNamesAndIds}
+     */
+    getProcedureParamNamesAndIds(): [string[], string[]];
+    /**
+     * @see {Blocks.getProcedureParamNamesIdsAndDefaults}
+     */
+    getProcedureParamNamesIdsAndDefaults(): [string[], string[], string[]];
+    /**
+     * @see {Thread.initParams}
+     */
+    initParams(): void;
+    /**
+     * @see {Thread.pushParam}
+     */
+    pushParam(name: string, value: ScratchCompatibleValue): void;
+    /**
+     * @see {Thread.getParam}
+     */
+    getParam(name: string): ScratchCompatibleValue;
+    /**
+     * Use instead of runtime.startHats inside blocks.
+     * @see {Runtime.startHats}
+     */
+    startHats: Runtime['startHats'];
+    ioQuery<Device extends keyof IODevices>(device: Device, func: keyof IODevices[Device], args: unknown[]): unknown;
   }
 
   const enum ThreadStatus {

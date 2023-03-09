@@ -61,3 +61,7 @@ vm.runtime.compatibilityMode as boolean
 
 const costume = vm.runtime.getTargetForStage()?.getCostumes()?.[0];
 costume?.skinId as number;
+
+declare const util: VM.BlockUtility;
+util.startHats('hats', {BROADCAST_OPTION: 'test'}) as VM.Thread[];
+util.ioQuery('mouse', 'getIsDown', []);
