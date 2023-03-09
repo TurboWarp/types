@@ -2,132 +2,253 @@
 /// <reference path="./scratch-render.d.ts" />
 
 declare namespace Scratch {
+  // Note that the 'B' in the BOOLEAN enums are capitalized in Scratch. It is not a typo in this file.
+
   namespace ArgumentType {
-    /** @deprecated not tested -- do not rely on yet */
     const ANGLE: 'angle';
     const BOOLEAN: 'Boolean';
-    /** @deprecated not tested -- do not rely on yet */
     const COLOR: 'color';
+    const IMAGE: 'image';
+    const MATRIX: 'matrix';
+    const NOTE: 'note';
     const NUMBER: 'number';
     const STRING: 'string';
-    /** @deprecated not tested -- do not rely on yet */
-    const MATRIX: 'matrix';
-    /** @deprecated not tested -- do not rely on yet */
-    const NOTE: 'note';
-    /** @deprecated not tested -- do not rely on yet */
-    const IMAGE: 'image';
   }
-  type ArgumentType = (typeof ArgumentType)[keyof typeof ArgumentType];
-  
+
   namespace BlockType {
-    // The B in Boolean is supposed to be capitalized
     const BOOLEAN: 'Boolean';
-    /** @deprecated not tested -- do not rely on yet */
+    /** @deprecated very incomplete and not useful yet */
     const BUTTON: 'button';
     const COMMAND: 'command';
-    /** @deprecated not tested -- do not rely on yet */
+    /** @deprecated does not work in compiler */
     const CONDITIONAL: 'conditional';
+    /** @deprecated use HAT instead */
     const EVENT: 'event';
     const HAT: 'hat';
-    /** @deprecated not tested -- do not rely on yet */
+    /** @deprecated does not work in compiler */
     const LOOP: 'loop';
     const REPORTER: 'reporter';
   }
-  type BlockType = (typeof BlockType)[keyof typeof BlockType];
-  
+
   namespace TargetType {
     const SPRITE: 'sprite';
     const STAGE: 'stage';
   }
-  type TargetType = (typeof TargetType)[keyof typeof TargetType];
-  
-  /**
-   * scratch-vm instance. Only for unsandboxed extensions.
-   */
-  const vm: VM;
-  
-  /**
-   * scratch-render instance. Only for unsandboxed extensions.
-   */
-  const renderer: RenderWebGL;
-  
-  /**
-   * Technically this can be a translatable object, but in reality it will probably just be
-   * a string here.
-   */
-  type FormattableString = string;
-  
-  interface ExtensionArgumentInfo {
-    type: ArgumentType;
+
+  interface AngleArgument {
+    type: 'angle';
+    /**
+     * Defaults to 0.
+     */
+    defaultValue?: string | number;
+  }
+  interface BooleanArgument {
+    type: 'Boolean';
+  }
+  interface ColorArgument {
+    type: 'color';
+    /**
+     * Should be a hex color code. No alpha channel supported. Defaults to random color.
+     */
+    defaultValue?: string | number;
+  }
+  interface NumberArgument {
+    type: 'number';
+    /**
+     * Defaults to 0.
+     */
     defaultValue?: string | number;
     menu?: string;
   }
-  
-  interface ExtensionBlock {
-    opcode: string;
-    blockType: BlockType;
-    text: FormattableString;
-    arguments?: Record<string, ExtensionArgumentInfo>;
-    // TODO: documentation mentions func, filter, branchCount, terminal, blockAllThreads
+  interface StringArgument {
+    type: 'string';
+    /**
+     * Defaults to empty string.
+     */
+    defaultValue?: string | number;
+    menu?: string;
   }
-  
-  interface ExtensionMenu {
+  interface MatrixArgument {
+    type: 'matrix';
+    /**
+     * Should be a 25 character long string of 1s and 0s.
+     * Numbers are technically accepted, but be aware that due to floating point precision, some detail may be lost.
+     * Technically optional, but behaves strangely with no default value.
+     */
+    defaultValue?: string | number;
+  }
+  interface NoteArgument {
+    type: 'note';
+    /**
+     * Defaults to 0 ("C (0)")
+     */
+    defaultValue?: string | number;
+  }
+  interface ImageArgument {
+    type: 'image';
+    dataURI: string;
+    /**
+     * Defaults to false.
+     */
+    flipRTL?: boolean;
+  }
+  type Argument = (
+    AngleArgument |
+    BooleanArgument |
+    ColorArgument |
+    NumberArgument |
+    StringArgument |
+    MatrixArgument |
+    NoteArgument |
+    ImageArgument
+  );
+
+  interface AbstractBlock {
+    opcode: string;
+    func?: string;
+    text: string | string[];
+    arguments?: Record<string, Argument>;
+    hideFromPalette?: boolean;
+    filter?: Array<'target' | 'sprite'>;
+    blockIconURI?: string;
+  }
+  interface BooleanBlock extends AbstractBlock {
+    blockType: 'Boolean';
+  }
+  interface ButtonBlock extends AbstractBlock {
+    blockType: 'button';
+    func: 'MAKE_A_LIST' | 'MAKE_A_PROCEDURE' | 'MAKE_A_VARIABLE';
+  }
+  interface CommandBlock extends AbstractBlock {
+    blockType: 'command';
+    /**
+     * Defaults to false.
+     */
+    isTerminal?: boolean;
+  }
+  interface ConditionalBlock extends AbstractBlock {
+    blockType: 'conditional';
+    /**
+     * Defaults to false.
+     */
+    isTerminal?: boolean;
+    /**
+     * Defaults to 1.
+     */
+    branchCount?: number;
+  }
+  interface EventBlock extends AbstractBlock {
+    blockType: 'event';
+    /**
+     * This must be explicitly set to false, otherwise the block will not work.
+     * Event blocks cannot be edge activated. Use hat instead.
+     */
+    isEdgeActivated: false;
+    /**
+     * Defaults to false.
+     */
+    shouldRestartExistingThreads?: boolean;
+  }
+  interface HatBlock extends AbstractBlock {
+    blockType: 'hat';
+    /**
+     * Defaults to true.
+     */
+    isEdgeActivated?: boolean;
+    /**
+     * Defaults to false.
+     */
+    shouldRestartExistingThreads?: boolean;
+  }
+  interface ReporterBlock extends AbstractBlock {
+    blockType: 'reporter';
+    /**
+     * Defaults to false.
+     */
+    disableMonitor?: boolean;
+  }
+  interface LoopBlock extends AbstractBlock {
+    blockType: 'loop';
+    /**
+     * Defaults to false.
+     */
+    isTerminal?: boolean;
+    /**
+     * Defaults to 1.
+     */
+    branchCount?: number;
+  }
+  type Block = (
+    BooleanBlock |
+    ButtonBlock |
+    CommandBlock |
+    ConditionalBlock |
+    EventBlock |
+    HatBlock |
+    ReporterBlock |
+    LoopBlock
+  );
+
+  interface Menu {
     acceptReporters?: boolean;
+    /**
+     * A list of static items in the menu, or the name of the dynamic menu function.
+     */
     items: Array<string | {
       text: string;
       value: string;
-    }>;
+    }> | string;
   }
-  
-  interface ExtensionInfo {
+
+  interface Info {
     id: string;
-  
+
     /**
-     * Defaults to ID if not specified.
+     * Defaults to extension ID if not specified.
      */
-    name?: FormattableString;
-  
+    name?: string;
+
     /**
      * Should be a hex color code.
      */
     color1?: string;
-  
+
     /**
      * Should be a hex color code.
      */
     color2?: string;
-  
+
     /**
      * Should be a hex color code.
      */
     color3?: string;
-  
+
     /**
      * Should be a data: URI
      */
     menuIconURI?: string;
-  
+
     /**
      * Should be a data: URI
      */
     blockIconURI?: string;
-  
+
     docsURI?: string;
-  
-    blocks: (ExtensionBlock | string)[];
-    menus?: Record<string, ExtensionMenu>;
+
+    blocks: (Block | string)[];
+    menus?: Record<string, Menu | string[]>;
   }
-  
+
   interface Extension {
-    getInfo(): ExtensionInfo;
+    getInfo(): Info;
   }
-  
+
   namespace extensions {
     function register(extensionObject: Extension): void;
   
     /**
-     * True if the extension is running unsandboxed.
+     * True if the extension is running unsandboxed, otherwise undefined.
      */
-    const unsandboxed: boolean;
+    const unsandboxed: undefined | boolean;
   }
 }
