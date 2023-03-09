@@ -1,6 +1,3 @@
-/// <reference path="./scratch-vm.d.ts" />
-/// <reference path="./scratch-render.d.ts" />
-
 declare namespace Scratch {
   // Note that the 'B' in the BOOLEAN enums are capitalized in Scratch. It is not a typo in this file.
 
