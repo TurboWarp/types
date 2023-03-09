@@ -2,9 +2,7 @@
 
 Scratch doesn't provide type definitions for their libraries, so we wrote our own.
 
-This project is still at an early stage.
-
-Despite being in the TurboWarp organization, this project is currently focused only on the vanilla (LLK) Scratch runtime and editor. Additional types for TurboWarp may be added later.
+This repository only contains types for the vanilla (LLK) Scratch runtime and editor. For the additional types in the TurboWarp runtimes, see [@turbowarp/types-tw](https://github.com/TurboWarp/types-tw).
 
 |Module|Status|
 |:-:|:-:|
