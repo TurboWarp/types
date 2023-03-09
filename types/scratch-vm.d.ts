@@ -1117,7 +1117,7 @@ declare namespace VM {
 
     _getMonitorThreadCount(threads: Thread[]): number;
 
-    startHats(opcode: string, matchFields?: Record<string, unknown>, target?: Target): void;
+    startHats(opcode: string, matchFields?: Record<string, unknown>, target?: Target): Thread[];
 
     toggleScript(topBlockId: string, options?: {
       target?: string;
