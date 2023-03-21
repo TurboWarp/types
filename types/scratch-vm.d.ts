@@ -289,7 +289,7 @@ declare namespace VM {
     };
   }
 
-  interface BaseTarget extends EventEmitter<{}> {
+  interface BaseTarget extends EventEmitter<RenderedTargetEventMap> {
     runtime: Runtime;
 
     id: string;
@@ -356,7 +356,9 @@ declare namespace VM {
   }
 
   interface RenderedTargetEventMap {
-    // TODO
+    TARGET_MOVED: [RenderedTarget, number, number, (boolean | null)?];
+
+    EVENT_TARGET_VISUAL_CHANGE: [RenderedTarget];
   }
 
   const enum Effect {
