@@ -1574,7 +1574,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   * Emit a workspaceUpdate event.
   */
   emitWorkspaceUpdate(): void;
-   
+
   /**
    * Post sprite info to the target that's being dragged, otherwise the editing target.
    * @see {VM.Target.postSpriteInfo}
