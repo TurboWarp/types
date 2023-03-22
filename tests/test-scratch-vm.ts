@@ -51,7 +51,7 @@ if (target) {
     const id: string = target.id;
     const x: number = fromX;
     const y: number = fromY;
-    const f: boolean | null | undefined = forced;
+    const f: boolean | undefined = forced;
   })
   target.on('EVENT_TARGET_VISUAL_CHANGE', (target) => {
     const id: string = target.id;
