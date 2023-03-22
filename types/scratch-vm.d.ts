@@ -356,7 +356,7 @@ declare namespace VM {
   }
 
   interface RenderedTargetEventMap {
-    TARGET_MOVED: [RenderedTarget, number, number, (boolean | null)?];
+    TARGET_MOVED: [RenderedTarget, number, number, boolean?];
 
     EVENT_TARGET_VISUAL_CHANGE: [RenderedTarget];
   }
