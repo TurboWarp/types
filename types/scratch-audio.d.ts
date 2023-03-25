@@ -112,6 +112,7 @@ declare namespace AudioEngine {
     finished(): Promise<void>;
     setPlaybackRate(playbackRate: number): void;
     take(): SoundPlayer;
+    connect(connectable: AudioEngine | Effect | EffectChain): void;
   }
 
   interface SoundBank {
