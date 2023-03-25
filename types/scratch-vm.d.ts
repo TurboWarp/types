@@ -289,7 +289,7 @@ declare namespace VM {
     };
   }
 
-  interface BaseTarget extends EventEmitter<{}> {
+  interface BaseTarget extends EventEmitter<RenderedTargetEventMap> {
     runtime: Runtime;
 
     id: string;
@@ -356,7 +356,9 @@ declare namespace VM {
   }
 
   interface RenderedTargetEventMap {
-    // TODO
+    TARGET_MOVED: [RenderedTarget, number, number, boolean?];
+
+    EVENT_TARGET_VISUAL_CHANGE: [RenderedTarget];
   }
 
   const enum Effect {
@@ -1574,7 +1576,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
   * Emit a workspaceUpdate event.
   */
   emitWorkspaceUpdate(): void;
-   
+
   /**
    * Post sprite info to the target that's being dragged, otherwise the editing target.
    * @see {VM.Target.postSpriteInfo}
