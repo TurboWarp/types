@@ -56,6 +56,10 @@ if (target) {
   target.on('EVENT_TARGET_VISUAL_CHANGE', (target) => {
     const id: string = target.id;
   });
+
+  runtime.on('STOP_FOR_TARGET', (t: VM.RenderedTarget) => {
+
+  });
 } else {
   const doesNotExist: undefined = target;
 }

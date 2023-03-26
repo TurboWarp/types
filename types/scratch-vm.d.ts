@@ -1030,7 +1030,7 @@ declare namespace VM {
   interface RuntimeEventMap extends RuntimeAndVirtualMachineEventMap {
     PROJECT_STOP_ALL: [];
 
-    STOP_FOR_TARGET: [BaseTarget, Thread | undefined];
+    STOP_FOR_TARGET: [Target, Thread | undefined];
 
     PROJECT_LOADED: [];
 
