@@ -11,14 +11,7 @@ declare namespace RenderWebGL {
 
   type BitmapData = ImageData | ImageBitmap | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
 
-  const enum LayerGroup {
-    // The renderer can be configured to use any strings as group names, but these are the groups
-    // that scratch-vm uses, listed in order.
-    Background = 'background',
-    Video = 'video',
-    Pen = 'pen',
-    Sprite = 'sprite'
-  }
+  type LayerGroup = 'background' | 'video' | 'pen' | 'sprite' | string;
 
   const enum UseGpuModes {
     Automatic = 'Automatic',
