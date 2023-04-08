@@ -11,14 +11,7 @@ declare namespace RenderWebGL {
 
   type BitmapData = ImageData | ImageBitmap | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
 
-  const enum LayerGroup {
-    // The renderer can be configured to use any strings as group names, but these are the groups
-    // that scratch-vm uses, listed in order.
-    Background = 'background',
-    Video = 'video',
-    Pen = 'pen',
-    Sprite = 'sprite'
-  }
+  type LayerGroup = 'background' | 'video' | 'pen' | 'sprite' | string;
 
   const enum UseGpuModes {
     Automatic = 'Automatic',
@@ -465,7 +458,7 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   _nextDrawableId: number;
   _allDrawables: RenderWebGL.Drawable[];
 
-  createDrawable(group: string): void;
+  createDrawable(group: string): number;
   destroyDrawable(drawableID: number, group: RenderWebGL.LayerGroup): void;
 
   _allSkins: RenderWebGL.Skin[];
@@ -474,7 +467,7 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   /**
    * @see {RenderWebGL.BitmapSkin.setBitmap}
    */
-  createBitmapSkin(image: RenderWebGL.BitmapData, bitmapResolution?: RenderWebGL.BitmapResolution, rotationCenter?: [number, number]): RenderWebGL.BitmapSkin;
+  createBitmapSkin(image: RenderWebGL.BitmapData, bitmapResolution?: RenderWebGL.BitmapResolution, rotationCenter?: [number, number]): number;
 
   /**
    * @see {RenderWebGL.BitmapSkin.setBitmap}
@@ -484,24 +477,24 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   /**
    * @see {RenderWebGL.SVGSkin.setSVG}
    */
-  createSVGSkin(svgData: string, rotationCenter: [number, number]): RenderWebGL.SVGSkin;
+  createSVGSkin(svgData: string, rotationCenter?: [number, number]): number;
 
   /**
    * @see {RenderWebGL.SVGSkin.setSVG}
    */
-  updateSVGSkin(skinId: number, svgData: string, rotationCenter: [number, number]): void;
+  updateSVGSkin(skinId: number, svgData: string, rotationCenter?: [number, number]): void;
 
   /**
    * @see {RenderWebGL.TextBubbleSkin.setTextBubble}
    */
-  createTextSkin(type: RenderWebGL.TextBubbleType, text: string, pointsLeft: boolean): RenderWebGL.TextBubbleSkin;
+  createTextSkin(type: RenderWebGL.TextBubbleType, text: string, pointsLeft: boolean): number;
 
   /**
    * @see {RenderWebGL.TextBubbleSkin.setTextBubble}
    */
   updateTextSkin(skinId: number, type: RenderWebGL.TextBubbleType, text: string, pointsLeft: boolean): void;
 
-  createPenSkin(): RenderWebGL.PenSkin;
+  createPenSkin(): number;
 
   destroySkin(skinId: number): void;
 
