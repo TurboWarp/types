@@ -64,6 +64,9 @@ if (target) {
   const doesNotExist: undefined = target;
 }
 
+runtime._editingTarget as VM.Target;
+runtime.getEditingTarget() as VM.Target;
+
 const audioEngine = new AudioEngine();
 vm.attachAudioEngine(audioEngine);
 audioEngine.audioContext.suspend();

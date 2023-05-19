@@ -1313,6 +1313,7 @@ declare namespace VM {
 
     emitProjectChanged(): void;
 
+    _editingTarget: Target | null;
     getEditingTarget(): Target | null;
 
     setEditingTarget(target: Target): void;
