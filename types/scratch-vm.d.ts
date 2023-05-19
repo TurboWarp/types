@@ -1144,7 +1144,7 @@ declare namespace VM {
     getTargetById(targetId: string): Target | undefined;
 
     /**
-     * Find a sprite's original target (not a clone) using the sprite's name.
+     * Find a sprite's original target (not a clone or stage) using the sprite's name.
      * Returns undefined if the target doesn't exist.
      */
     getSpriteTargetByName(spriteName: string): Target | undefined;
