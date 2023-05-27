@@ -14,7 +14,6 @@ declare namespace Scratch {
 
   namespace BlockType {
     const BOOLEAN: 'Boolean';
-    /** @deprecated very incomplete and not useful yet */
     const BUTTON: 'button';
     const COMMAND: 'command';
     /** @deprecated does not work in compiler */
@@ -101,29 +100,31 @@ declare namespace Scratch {
   );
 
   interface AbstractBlock {
+    text: string | string[];
+    filter?: Array<'target' | 'sprite'>;
+  }
+  interface ExecutableBlock extends AbstractBlock {
     opcode: string;
     func?: string;
-    text: string | string[];
     arguments?: Record<string, Argument>;
     hideFromPalette?: boolean;
-    filter?: Array<'target' | 'sprite'>;
     blockIconURI?: string;
   }
-  interface BooleanBlock extends AbstractBlock {
+  interface BooleanBlock extends ExecutableBlock {
     blockType: 'Boolean';
   }
   interface ButtonBlock extends AbstractBlock {
     blockType: 'button';
     func: 'MAKE_A_LIST' | 'MAKE_A_PROCEDURE' | 'MAKE_A_VARIABLE';
   }
-  interface CommandBlock extends AbstractBlock {
+  interface CommandBlock extends ExecutableBlock {
     blockType: 'command';
     /**
      * Defaults to false.
      */
     isTerminal?: boolean;
   }
-  interface ConditionalBlock extends AbstractBlock {
+  interface ConditionalBlock extends ExecutableBlock {
     blockType: 'conditional';
     /**
      * Defaults to false.
@@ -134,7 +135,7 @@ declare namespace Scratch {
      */
     branchCount?: number;
   }
-  interface EventBlock extends AbstractBlock {
+  interface EventBlock extends ExecutableBlock {
     blockType: 'event';
     /**
      * This must be explicitly set to false, otherwise the block will not work.
@@ -146,7 +147,7 @@ declare namespace Scratch {
      */
     shouldRestartExistingThreads?: boolean;
   }
-  interface HatBlock extends AbstractBlock {
+  interface HatBlock extends ExecutableBlock {
     blockType: 'hat';
     /**
      * Defaults to true.
@@ -157,14 +158,14 @@ declare namespace Scratch {
      */
     shouldRestartExistingThreads?: boolean;
   }
-  interface ReporterBlock extends AbstractBlock {
+  interface ReporterBlock extends ExecutableBlock {
     blockType: 'reporter';
     /**
      * Defaults to false.
      */
     disableMonitor?: boolean;
   }
-  interface LoopBlock extends AbstractBlock {
+  interface LoopBlock extends ExecutableBlock {
     blockType: 'loop';
     /**
      * Defaults to false.

@@ -61,7 +61,6 @@
             }
           },
           {
-            opcode: 'button',
             blockType: Scratch.BlockType.BUTTON,
             func: 'MAKE_A_VARIABLE',
             text: 'button text'
