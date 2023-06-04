@@ -19,6 +19,7 @@
               }
             }
           },
+          '---',
           {
             opcode: 'test',
             text: 'test [STRING] [IMAGE] [BOOLEAN] [NUMBER] [MATRIX] [NOTE] [ANGLE] [COLOR]',
