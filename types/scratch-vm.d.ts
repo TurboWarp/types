@@ -31,11 +31,7 @@ declare namespace VM {
   type IfGui<HasGui, NoGui> = HasGui;
 
   type ScratchCompatibleValue = string | boolean | number;
-
-  interface ScratchList extends Array<ScratchCompatibleValue> {
-    _monitorUpToDate?: boolean;
-  }
-
+  type ScratchList = ScratchCompatibleValue[];
   type VariableValue = ScratchCompatibleValue | ScratchList;
 
   interface BaseAsset {
@@ -205,6 +201,7 @@ declare namespace VM {
   interface ListVariable extends BaseVariable {
     type: 'list';
     value: ScratchList;
+    _monitorUpToDate?: boolean;
   }
 
   interface BroadcastVariable extends BaseVariable {
