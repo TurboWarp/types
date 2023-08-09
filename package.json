@@ -1,6 +1,6 @@
 {
   "name": "@turbowarp/types",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Type definitions for the Scratch VM and editor",
   "keywords": [
     "scratch"
