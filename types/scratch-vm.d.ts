@@ -759,6 +759,8 @@ declare namespace VM {
   interface ExtensionManager {
     runtime: Runtime;
 
+    refreshBlocks(): Promise<void[]>;
+
     isExtensionLoaded(extensionID: string): boolean;
 
     /**
