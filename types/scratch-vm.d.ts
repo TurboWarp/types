@@ -601,6 +601,8 @@ declare namespace VM {
      */
     onStopAll(): void;
 
+    updateAllDrawableProperties(): void;
+
     toJSON(): SerializedTarget;
   }
 
