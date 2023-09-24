@@ -20,3 +20,18 @@ storage.addWebStore(
     return `https://assets.scratch.mit.edu/${assetId}.${dataFormat}`;
   }
 );
+
+storage.createAsset(
+  storage.AssetType.ImageBitmap,
+  storage.DataFormat.PNG,
+  new Uint8Array([]),
+  null,
+  true
+) as ScratchStorage.Asset;
+storage.createAsset(
+  storage.AssetType.ImageBitmap,
+  storage.DataFormat.PNG,
+  new Uint8Array([]),
+  "1234567",
+  false
+) as ScratchStorage.Asset;

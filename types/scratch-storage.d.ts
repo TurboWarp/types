@@ -78,7 +78,8 @@ declare class ScratchStorage {
 
   store(assetType: ScratchStorage.Asset, dataFormat: ScratchStorage.DataFormat, data: ArrayBuffer, assetId: string): Promise<unknown>;
 
-  createAsset(assetType: ScratchStorage.AssetType, dataFormat: ScratchStorage.DataFormat, data: ArrayBuffer, assetId: string, generateId?: boolean): void;
+  createAsset(assetType: ScratchStorage.AssetType, dataFormat: ScratchStorage.DataFormat, data: ArrayBuffer, assetId: null, generateId: true): ScratchStorage.Asset;
+  createAsset(assetType: ScratchStorage.AssetType, dataFormat: ScratchStorage.DataFormat, data: ArrayBuffer, assetId: string, generateId?: boolean): ScratchStorage.Asset;
 
   addWebStore(types: ScratchStorage.AssetType[], getFunction: ScratchStorage.UrlFunction, createFunction?: ScratchStorage.UrlFunction, updateFunction?: ScratchStorage.UrlFunction): void;
 
