@@ -4,6 +4,8 @@ Scratch doesn't provide type definitions for their libraries, so we wrote our ow
 
 This repository only contains types for the vanilla (LLK) Scratch runtime and editor. For the additional types in the TurboWarp runtimes, see [@turbowarp/types-tw](https://github.com/TurboWarp/types-tw).
 
+A possibly more human-readable version of the TypeScript definitions can be found at: https://turbowarp.github.io/types/
+
 |Module|Status|
 |:-:|:-:|
 |scratch-vm|✅|
