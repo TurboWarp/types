@@ -21,8 +21,5 @@ jobs:
         run: npm test
       - name: Validate individual .d.ts files
         run: |
-          set -e
-          for i in index.d.ts types/*.d.ts; do
-            echo "Validating $i"
-            npx tsc "$i" --target es6 --noEmit
-          done
+          sudo apt install parallel
+          parallel -v npx tsc --target es6 --noEmit ::: index.d.ts types/*.d.ts
