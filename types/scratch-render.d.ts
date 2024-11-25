@@ -604,8 +604,8 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   updateDrawableSkinId(drawableId: number, skinId: number): void;
   updateDrawablePosition(drawableId: number, position: [number, number]): void;
   updateDrawableDirection(drawableId: number, direction: number): void;
-  updateDrawableScale(drawableId: number, scale: number): void;
-  updateDrawableDirectionScale(drawableId: number, direction: number, scale: number): void;
+  updateDrawableScale(drawableId: number, scale: [number, number]): void;
+  updateDrawableDirectionScale(drawableId: number, direction: number, scale: [number, number]): void;
   updateDrawableVisible(drawableId: number, visible: boolean): void;
   updateDrawableEffect(drawableId: number, effectName: RenderWebGL.Effect, value: number): void;
   /**
