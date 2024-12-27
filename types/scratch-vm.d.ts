@@ -180,6 +180,12 @@ declare namespace VM {
     forceNoGlow: boolean;
   }
 
+  interface RuntimeScriptCache {
+    container: Blocks;
+    blockId: string;
+    fieldsOfInputs: Record<string, Field>;
+  }
+
   interface BaseVariable {
     id: string;
     name: string;
@@ -1202,7 +1208,7 @@ declare namespace VM {
 
     allScriptsDo(callback: (blockId: string, target: Target) => void, target?: Target): void;
 
-    allScriptsByOpcodeDo(opcode: string, callback: (blockId: string, target: Target) => void, target?: Target): void;
+    allScriptsByOpcodeDo(opcode: string, callback: (script: RuntimeScriptCache, target: Target) => void, target?: Target): void;
 
     sequencer: Sequencer;
 
