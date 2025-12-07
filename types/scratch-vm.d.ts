@@ -41,9 +41,9 @@ declare namespace VM {
     assetId: string;
 
     /**
-     * The md5 + file extension of this asset.
+     * The md5 + file extension of this asset. May be missing.
      */
-    md5: string;
+    md5?: string;
 
     name: string;
 
