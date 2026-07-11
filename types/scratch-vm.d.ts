@@ -398,6 +398,8 @@ declare namespace VM {
 
     isStage: boolean;
 
+    dragging: boolean;
+
     /**
      * Returns true if the target is not the stage and is not a clone.
      */
