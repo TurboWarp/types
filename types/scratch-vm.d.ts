@@ -45,6 +45,8 @@ declare namespace VM {
      */
     md5?: string;
 
+    md5ext?: string;
+
     name: string;
 
     asset: ScratchStorage.Asset;
