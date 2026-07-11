@@ -6,6 +6,7 @@ type EventEmitterCallback<Events, K extends keyof Events> = (...args: Events[K] 
 
 declare class EventEmitter<Events> {
   on<K extends keyof Events>(event: K, callback: EventEmitterCallback<Events, K>): void;
+  addListener<K extends keyof Events>(event: K, callback: EventEmitterCallback<Events, K>): void;
   once<K extends keyof Events>(event: K, callback: EventEmitterCallback<Events, K>): void;
   off<K extends keyof Events>(event: K, callback: EventEmitterCallback<Events, K>): void;
   removeListener<K extends keyof Events>(event: K, callback: EventEmitterCallback<Events, K>): void;
