@@ -14,7 +14,9 @@ declare namespace AudioEngine {
     mic: MediaStreamAudioSourceNode;
 
     /**
-     * @returns Loudness measured from 0-100.
+     * Get the current loudness of sound received by the microphone.
+     * Sound is measured in RMS and smoothed.
+     * @returns Loudness scaled 0 to 100, or -1 if there is no microphone input.
      */
     getLoudness(): number;
   }
@@ -32,7 +34,7 @@ declare namespace AudioEngine {
     target: Target;
     connect(target: Target): void;
     get name(): string;
-    get DEFAULT_VALUE(): string;
+    get DEFAULT_VALUE(): number;
     get _isPatch(): boolean;
     _set(value: number): void;
     set(value: number): void;
@@ -44,6 +46,10 @@ declare namespace AudioEngine {
   interface PitchEffect extends AbstractEffect {
     get name(): 'pitch';
     ratio: number;
+    /**
+     * The playback ratio is scaled so that a change of 10 in the effect value
+     * gives a change of 1 semitone in the ratio.
+     */
     getRatio(val: number): number;
     updatePlayer(soundPlayer: SoundPlayer): void;
     updatePlayers(soundPlayers: Record<string, SoundPlayer> | SoundPlayer[]): void;
@@ -101,6 +107,10 @@ declare namespace AudioEngine {
     isStarting: boolean;
     isPlaying: boolean;
     startingUntil: number;
+    playbackRate: number;
+    volumeEffect: VolumeEffect | null;
+    target: AudioEngine | Effect | EffectChain | null;
+    initialized: boolean;
     handleEvent(event: Event): void;
     onEnded(): void;
     _createSource(): void;
@@ -112,7 +122,7 @@ declare namespace AudioEngine {
     finished(): Promise<void>;
     setPlaybackRate(playbackRate: number): void;
     take(): SoundPlayer;
-    connect(connectable: AudioEngine | Effect | EffectChain): void;
+    connect(connectable: AudioEngine | Effect | EffectChain): SoundPlayer | undefined;
   }
 
   interface SoundBank {
@@ -144,7 +154,7 @@ declare namespace AudioEngine {
     playSound(target: Target, soundId: string): Promise<void>;
     setEffects(target: Target): void;
     stop(target: Target, soundId: string): void;
-    stopAllSounds(target: Target | '*'): void;
+    stopAllSounds(target?: Target | '*'): void;
     dispose(): void;
   }
 
