@@ -324,7 +324,7 @@ declare namespace RenderWebGL {
 
     _scale: twgl.V3;
     get scale(): twgl.V3;
-    updateScale(scale: number): void;
+    updateScale(scale: [number, number]): void;
 
     _direction: number;
     updateDirection(direction: number): void;
