@@ -1548,11 +1548,11 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
 
   addCostume(md5ext: string, costume?: VM.Costume, targetId?: string, version?: 2): Promise<void>;
 
-  addCostumeFromLibrary(md5ext: string, costume: VM.Costume): Promise<void>;
+  addCostumeFromLibrary(md5ext: string, costume: Partial<VM.Costume>): Promise<void>;
 
   addBackdrop(md5ext: string, costume?: VM.Costume): Promise<void>;
 
-  addSound(sound: VM.Sound, targetId?: string): Promise<void>;
+  addSound(sound: Partial<VM.Sound>, targetId?: string): Promise<void>;
 
   duplicateSprite(targetId: string): Promise<void>;
 
