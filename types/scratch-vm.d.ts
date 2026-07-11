@@ -954,10 +954,10 @@ declare namespace VM {
 
   interface Video {
     _drawable: number;
-    mirror: boolean;
+    mirror?: boolean;
     readonly videoReady: boolean;
 
-    enableVideo(): Promise<Video> | null;
+    enableVideo(): Promise<void> | null;
     disableVideo(): void;
 
     getFrame(frameInfo: {
