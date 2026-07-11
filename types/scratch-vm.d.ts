@@ -952,7 +952,22 @@ declare namespace VM {
   }
 
   interface Video {
-    // TODO
+    _drawable: number;
+    mirror: boolean;
+    readonly videoReady: boolean;
+
+    enableVideo(): Promise<Video> | null;
+    disableVideo(): void;
+
+    getFrame(frameInfo: {
+      dimensions?: [number, number];
+      mirror?: boolean;
+      format?: 'image-data' | 'canvas' | string;
+      cacheTimeout?: number;
+    }): ImageData | HTMLCanvasElement | string | null;
+
+    setPreviewGhost(ghost: number): void;
+
     postData(data: VideoData): void;
   }
 
