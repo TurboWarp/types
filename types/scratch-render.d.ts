@@ -148,7 +148,7 @@ declare namespace RenderWebGL {
 
     useNearest(scale: [number, number], drawable: Drawable): boolean;
 
-    getTexture(scale: [number, number]): WebGLTexture;
+    getTexture(scale?: [number, number]): WebGLTexture;
     _setTexture(image: BitmapData): void;
     setEmptyImageData(): void;
 
