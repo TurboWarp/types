@@ -134,7 +134,7 @@ declare namespace RenderWebGL {
     getUniforms(): Skin['_uniforms'];
 
     _silhouette: Silhouette;
-    updateSilhouette(): void;
+    updateSilhouette(scale?: [number, number]): void;
 
     /**
      * @see {Silhouette.isTouchingNearest}
