@@ -178,6 +178,14 @@ declare namespace ScratchBlocks {
   interface BlocklyGlobal {
     getMainWorkspace(): Workspace | null;
   }
+
+  function prompt(
+    message: string,
+    defaultValue: string,
+    callback: (value: string | null) => void,
+    title?: string,
+    varType?: string
+  ): void;
 }
 
 declare const Blockly: ScratchBlocks.BlocklyGlobal | undefined;

@@ -13,3 +13,5 @@ workspace.id.toString();
 
 const fakeWorkspace = new RealBlockly.Workspace({});
 fakeWorkspace.id.charAt(0);
+
+ScratchBlocks.prompt('test', '123', (val) => {});
