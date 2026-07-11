@@ -39,6 +39,8 @@ declare namespace ScratchStorage {
      */
     assetId: string;
 
+    data: Uint8Array;
+
     setData(data: Uint8Array, dataFormat: DataFormat, generateId?: boolean): void;
     encodeTextData(text: string, dataFormat: DataFormat, generateId?: boolean): void;
 
