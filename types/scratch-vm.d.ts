@@ -1559,7 +1559,7 @@ declare class VM extends EventEmitter<VM.VirtualMachineEventMap> {
    */
   addSprite(data: ArrayBufferView | ArrayBuffer | string | object): Promise<void>;
 
-  addCostume(md5ext: string, costume?: VM.Costume, targetId?: string, version?: 2): Promise<void>;
+  addCostume(md5ext: string, costume?: Partial<VM.Costume>, targetId?: string, version?: 2): Promise<void>;
 
   addCostumeFromLibrary(md5ext: string, costume: Partial<VM.Costume>): Promise<void>;
 
