@@ -593,7 +593,7 @@ declare namespace VM {
     tempo: number;
 
     videoTransparency: number;
-
+    videoState: 'off' | 'on' | 'on-flipped';
 
     /**
      * Create a clone of this sprite if the clone limit has not been reached.
