@@ -26,3 +26,14 @@ declare namespace twgl {
     // TODO
   }
 }
+
+declare class twgl {
+  createFramebufferInfo(...args: unknown[]): twgl.FrameBufferInfo;
+  resizeFramebufferInfo(...args: unknown[]): void;
+  createProgramInfo(...args: unknown[]): twgl.ProgramInfo;
+  createBufferInfoFromArrays(...args: unknown[]): twgl.BufferInfo;
+  createTexture(...args: unknown[]): WebGLTexture;
+  setBuffersAndAttributes(...args: unknown[]): void;
+  setUniforms(...args: unknown[]): void;
+  drawBufferInfo(...args: unknown[]): void;
+}
