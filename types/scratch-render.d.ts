@@ -209,7 +209,7 @@ declare namespace RenderWebGL {
     _renderer: RenderWebGL;
 
     _size: [number, number];
-    _framebuffer: WebGLFramebuffer;
+    _framebuffer: twgl.FrameBufferInfo;
     _silhouetteDirty: boolean;
     _silhouettePixels: Uint8Array;
     _silhouetteImageData: ImageData;

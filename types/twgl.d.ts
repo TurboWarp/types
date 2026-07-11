@@ -11,6 +11,13 @@ declare namespace twgl {
     // TODO: returned by createProgramInfo
   }
 
+  interface FrameBufferInfo {
+    attachments: WebGLTexture[];
+    framebuffer: WebGLFramebuffer;
+    width: number;
+    height: number;
+  }
+
   interface M4 {
     // TODO
   }
