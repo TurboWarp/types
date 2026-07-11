@@ -2,6 +2,9 @@
 // Project: https://github.com/LLK/scratch-blocks
 
 declare namespace ScratchBlocks {
+  const Blocks: Record<string, unknown>;
+  const Msg: Record<string, string>;
+
   class Block {
 
   }
