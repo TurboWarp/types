@@ -355,7 +355,7 @@ declare namespace VM {
   }
 
   const enum RotationStyle {
-    AllAround = 'all-around',
+    AllAround = 'all around',
     LeftRight = 'left-right',
     None = "don't rotate"
   }
