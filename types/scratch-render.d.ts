@@ -556,7 +556,7 @@ declare class RenderWebGL extends EventEmitter<RenderWebGL.ScratchRenderEventMap
   pick(centerX: number, centerY: number, width?: number, height?: number, candidateIds?: number[]): number | -1 | false;
 
   extractDrawableScreenSpace(drawableId: number): {
-    data: ImageData;
+    imageData: ImageData;
     x: number;
     y: number;
     width: number;
