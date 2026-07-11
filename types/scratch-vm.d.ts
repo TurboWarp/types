@@ -963,6 +963,18 @@ declare namespace VM {
     getFrame(frameInfo: {
       dimensions?: [number, number];
       mirror?: boolean;
+      format?: 'image-data';
+      cacheTimeout?: number;
+    }): ImageData | null;
+    getFrame(frameInfo: {
+      dimensions?: [number, number];
+      mirror?: boolean;
+      format?: 'canvas';
+      cacheTimeout?: number;
+    }): HTMLCanvasElement | null;
+    getFrame(frameInfo: {
+      dimensions?: [number, number];
+      mirror?: boolean;
       format?: 'image-data' | 'canvas' | string;
       cacheTimeout?: number;
     }): ImageData | HTMLCanvasElement | string | null;

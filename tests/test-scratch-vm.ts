@@ -82,3 +82,7 @@ costume?.skinId as number;
 declare const util: VM.BlockUtility;
 util.startHats('hats', {BROADCAST_OPTION: 'test'}) as VM.Thread[];
 util.ioQuery('mouse', 'getIsDown', []);
+
+const videoCanvas: HTMLCanvasElement | null = vm.runtime.ioDevices.video.getFrame({
+  format: "canvas",
+});
